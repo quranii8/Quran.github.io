@@ -1,15 +1,96 @@
 :root {
-    --dark-teal: #2F5F63;
-    --gold: #C9B07A;
+    --dark-teal: #2F5F63; /* الأخضر المزرق الغامق */
+    --gold: #C9B07A;      /* الذهبي الناعم */
     --white: #ffffff;
+    --bg-light: #fdfcf9;
 }
 
-body { font-family: 'Amiri', serif; background-color: #f4f7f6; color: var(--dark-teal); margin: 0; text-align: center; }
-header { background-color: var(--dark-teal); color: var(--gold); padding: 20px; border-bottom: 4px solid var(--gold); }
-#searchInput { padding: 10px; width: 250px; border-radius: 20px; border: 2px solid var(--gold); margin-top: 10px; }
-.surah-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; padding: 20px; }
-.surah-card { background: white; padding: 15px; border-right: 5px solid var(--gold); cursor: pointer; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-.surah-card:hover { background: var(--dark-teal); color: var(--gold); }
-#playBtn { background: var(--dark-teal); color: var(--gold); border: 2px solid var(--gold); padding: 15px 30px; border-radius: 50px; font-size: 1.2rem; cursor: pointer; font-weight: bold; margin: 20px; }
-.ayah-text { font-size: 1.8rem; line-height: 2.5; padding: 20px; background: white; border-radius: 10px; margin: 20px; }
-.ayah-num { color: var(--gold); font-size: 1.2rem; }
+body {
+    font-family: 'Amiri', serif;
+    background-color: var(--bg-light);
+    color: var(--dark-teal);
+    margin: 0;
+    direction: rtl;
+}
+
+header {
+    background-color: var(--dark-teal);
+    color: var(--gold);
+    padding: 30px;
+    text-align: center;
+    border-bottom: 5px solid var(--gold);
+}
+
+.search-box input {
+    margin-top: 15px;
+    padding: 10px 20px;
+    width: 280px;
+    border-radius: 25px;
+    border: 2px solid var(--gold);
+    outline: none;
+}
+
+.container { max-width: 1000px; margin: auto; padding: 20px; }
+
+.surah-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+}
+
+.surah-card {
+    background: var(--white);
+    padding: 20px;
+    border: 1px solid #eee;
+    border-right: 5px solid var(--gold);
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.surah-card:hover {
+    background: var(--dark-teal);
+    color: var(--gold);
+}
+
+.player-container {
+    text-align: center;
+    background: var(--white);
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid var(--gold);
+}
+
+#playBtn {
+    background: var(--dark-teal);
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    padding: 15px 45px;
+    border-radius: 50px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    font-family: 'Amiri';
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.ayah-text {
+    font-size: 2rem;
+    line-height: 2.5;
+    text-align: center;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.ayah-num { color: var(--gold); font-weight: bold; margin: 0 5px; }
+
+.back-btn {
+    background: var(--gold);
+    color: var(--dark-teal);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
