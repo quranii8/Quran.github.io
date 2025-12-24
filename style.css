@@ -1,19 +1,18 @@
-/* --- المتغيرات الأساسية --- */
 :root {
     --dark-teal: #2F5F63;
     --gold: #C9B07A;
     --white: #ffffff;
     --bg: #fdfcf9;
+    --black: #000000;
 }
 
-/* --- التنسيق العام --- */
 body { 
     font-family: 'Amiri', serif; 
     background-color: var(--bg); 
     color: var(--dark-teal); 
     margin: 0; 
     direction: rtl; 
-    transition: background 0.3s, color 0.3s; 
+    transition: 0.3s ease; 
 }
 
 header { 
@@ -24,90 +23,74 @@ header {
     border-bottom: 5px solid var(--gold); 
 }
 
-.main-nav { display: flex; justify-content: center; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+.main-nav { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
 .main-nav button { 
     background: transparent; border: 2px solid var(--gold); color: var(--gold); 
-    padding: 10px 20px; border-radius: 25px; cursor: pointer; font-family: 'Amiri'; font-weight: bold; 
+    padding: 8px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; 
 }
 .main-nav button.active { background: var(--gold); color: var(--dark-teal); }
 
 .container { max-width: 800px; margin: auto; padding: 20px; }
 
-/* --- البطاقات (الوضع الفاتح) --- */
-.surah-card, .category-card, .zekr-card, .player-container, .ayah-text { 
-    background: white; padding: 25px; border-radius: 15px; margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-right: 6px solid var(--gold);
+/* أدوات التحكم العلوية العصرية */
+.modern-header-tools {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 5px; margin-bottom: 20px; border-bottom: 1px solid rgba(201, 176, 122, 0.3);
+}
+.icon-back-btn {
+    background: var(--gold); border: none; border-radius: 50%; width: 40px; height: 40px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.center-tools { display: flex; gap: 8px; }
+.tool-btn {
+    background: rgba(47, 95, 99, 0.1); border: 1px solid var(--gold); color: var(--dark-teal);
+    padding: 6px 12px; border-radius: 15px; cursor: pointer; font-weight: bold;
 }
 
-.zekr-text, .ayah-text { font-size: 1.6rem; line-height: 2.3; text-align: center; color: var(--dark-teal); }
-.ayah-num { color: var(--gold); font-weight: bold; margin: 0 5px; }
-
-.zekr-counter { 
-    display: inline-block; background: var(--dark-teal); color: var(--gold); 
-    padding: 5px 15px; border-radius: 20px; margin-top: 10px; 
+/* المشغل العصري */
+.player-container.modern-style {
+    background: white; padding: 30px 20px; border-radius: 25px; 
+    text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
-
-/* --- المشغل والبحث --- */
-.search-box input { width: 100%; padding: 15px; border: 2px solid var(--gold); border-radius: 10px; margin-bottom: 20px; font-family: 'Amiri'; }
-#reciterSelect { width: 100%; padding: 12px; border-radius: 30px; background: var(--dark-teal); color: white; border: 2px solid var(--gold); }
-#playBtn { width: 70px; height: 70px; border-radius: 50%; background: var(--dark-teal); color: var(--gold); font-size: 2rem; border: 3px solid var(--gold); cursor: pointer; }
-
-/* --- السبحة --- */
-.timer-wrapper { text-align: center; margin-bottom: 20px; padding: 15px; border: 1px dashed var(--gold); border-radius: 15px; }
-.modern-timer { font-family: monospace; font-size: 2rem; color: #e74c3c; font-weight: bold; }
-.sebha-circle { width: 220px; height: 220px; border-radius: 50%; background: var(--dark-teal); color: var(--gold); display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 30px auto; border: 8px solid var(--gold); cursor: pointer; }
-
-/* =============================================
-   حل مشكلة الوضع الداكن الجذري (أسود ملكي)
-   ============================================= */
-
-body.dark-mode {
-    background-color: #000000 !important; /* خلفية الموقع سوداء تماماً */
+.modern-player-layout { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 20px; }
+.play-btn-small {
+    width: 65px; height: 65px; border-radius: 50%; background: var(--dark-teal);
+    color: var(--gold); border: 3px solid var(--gold); font-size: 1.6rem;
+    cursor: pointer; display: flex; justify-content: center; align-items: center;
 }
+.progress-wrapper { width: 100%; display: flex; align-items: center; gap: 12px; }
+.slider-container { flex-grow: 1; display: flex; align-items: center; }
+#seekSlider { width: 100%; height: 5px; accent-color: var(--dark-teal); cursor: pointer; }
+.time-label { font-family: sans-serif; font-size: 0.85rem; color: var(--dark-teal); }
 
-/* توحيد كل البطاقات لتصبح سوداء والنص أبيض */
-body.dark-mode .surah-card, 
-body.dark-mode .category-card, 
-body.dark-mode .zekr-card, 
-body.dark-mode .player-container, 
-body.dark-mode .ayah-text,
-body.dark-mode .search-box input,
-body.dark-mode header {
-    background-color: #111111 !important; /* خلفية البطاقة سوداء مخففة قليلاً لتمييزها عن الخلفية العامة */
-    color: #ffffff !important; /* النص أبيض ناصع */
-    border: 1px solid #333 !important; /* حدود ناعمة */
-    border-right: 6px solid var(--gold) !important; /* الحفاظ على الهوية الذهبية */
-    box-shadow: none !important;
+/* نصوص القرآن والأذكار */
+.ayah-text { 
+    background: white; padding: 35px; border-radius: 20px; font-size: 1.9rem; 
+    line-height: 2.8; text-align: center; margin-top: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
+.zekr-card { 
+    background: white; padding: 25px; border-right: 8px solid var(--gold); 
+    border-radius: 12px; margin-bottom: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.zekr-text { font-size: 1.5rem; line-height: 2.2; text-align: center; margin-bottom: 15px; }
+.zekr-counter { background: var(--dark-teal); color: var(--gold); padding: 5px 15px; border-radius: 20px; }
 
-/* ضمان أن نصوص الأذكار والآيات داخل البطاقات بيضاء */
-body.dark-mode .zekr-text, 
-body.dark-mode .ayah-text,
-body.dark-mode #current-surah-title,
-body.dark-mode .timer-label {
-    color: #ffffff !important;
+/* السبحة */
+.timer-wrapper { text-align: center; margin-bottom: 20px; padding: 15px; border-radius: 15px; border: 1px dashed var(--gold); }
+.modern-timer { font-family: monospace; font-size: 1.8rem; font-weight: bold; color: #e74c3c; }
+.sebha-circle { 
+    width: 220px; height: 220px; border-radius: 50%; background: var(--dark-teal); 
+    color: var(--gold); display: flex; flex-direction: column; justify-content: center; 
+    align-items: center; margin: 30px auto; border: 8px solid var(--gold); cursor: pointer; 
 }
+#sebhaCounter { font-size: 4rem; font-weight: bold; }
+.modern-reset-btn { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; padding: 12px 25px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; }
 
-/* أرقام الآيات تبقى ذهبية لتبرز في السواد */
-body.dark-mode .ayah-num {
-    color: var(--gold) !important;
+/* الوضع الداكن الملكي */
+body.dark-mode { background-color: var(--black) !important; color: white !important; }
+body.dark-mode .player-container, body.dark-mode .ayah-text, body.dark-mode .surah-card, body.dark-mode .zekr-card {
+    background-color: #111 !important; border: 1px solid var(--gold) !important; color: white !important;
 }
-
-/* تعديل ألوان العداد (المتبقي) في السواد */
-body.dark-mode .zekr-counter {
-    background-color: var(--gold) !important;
-    color: #000000 !important;
-    font-weight: bold;
-}
-
-/* البطاقة المنتهية في السواد */
-body.dark-mode .zekr-card.done {
-    background-color: #0a1a10 !important; /* أخضر غامق جداً */
-    border-right-color: #2ecc71 !important;
-}
-
-/* تعديل القوائم المنسدلة */
-body.dark-mode #reciterSelect {
-    background-color: #222 !important;
-    color: white !important;
-}
+body.dark-mode .zekr-text { color: white !important; }
+body.dark-mode .tool-btn { background: #222; color: var(--gold); }
+body.dark-mode .time-label { color: var(--gold); }
