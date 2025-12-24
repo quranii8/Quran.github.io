@@ -14,6 +14,7 @@
     <div class="main-nav">
         <button id="quranTab" class="active" onclick="switchMainTab('quran')">القرآن الكريم</button>
         <button id="azkarTab" onclick="switchMainTab('azkar')">قسم الأذكار</button>
+        <button id="sebhaTab" onclick="switchMainTab('sebha')">السبحة</button>
     </div>
 </header>
 
@@ -22,9 +23,7 @@
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="ابحث عن سورة..." onkeyup="filterSurahs()">
         </div>
-        <div id="main-view">
-            <div class="surah-grid" id="surahList"></div>
-        </div>
+        <div id="main-view"><div class="surah-grid" id="surahList"></div></div>
         <div id="quran-view" style="display:none;">
             <div class="top-controls">
                 <button class="back-btn" onclick="showMain()">← العودة</button>
@@ -65,9 +64,32 @@
             <div class="surah-card" onclick="loadAzkar('sleep')">🛌 أذكار النوم</div>
         </div>
         <div id="azkar-content" style="display:none;">
-            <button class="back-btn" onclick="backToAzkarCats()">← العودة للأقسام</button>
+            <button class="back-btn" onclick="backToAzkarCats()">← العودة</button>
             <h2 id="azkar-title" style="text-align:center;"></h2>
             <div id="azkarList"></div>
+        </div>
+    </div>
+
+    <div id="sebha-section" style="display:none;">
+        <div class="sebha-container">
+            <p id="resetTimerText">تصفير تلقائي بعد: <span id="resetTimer">--:--:--</span></p>
+            <div class="goal-selector">
+                <span>الهدف اليومي: </span>
+                <select id="sebhaGoal" onchange="setSebhaGoal()">
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                    <option value="1000" selected>1000</option>
+                </select>
+            </div>
+            <div class="sebha-circle" onclick="incrementSebha()">
+                <span id="sebhaCounter">0</span>
+                <small>اضغط للتسبيح</small>
+            </div>
+            <div class="progress-bar-container">
+                <div id="sebhaProgress" class="progress-bar"></div>
+            </div>
+            <p id="goalText">المتبقي للهدف: 1000</p>
+            <button class="reset-btn" onclick="resetSebha()">تصفير يدوي</button>
         </div>
     </div>
 </div>
