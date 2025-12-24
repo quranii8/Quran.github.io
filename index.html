@@ -39,8 +39,14 @@
                         <option value="husr">محمود خليل الحصري</option>
                     </select>
                 </div>
-                <div class="audio-wrapper">
-                    <button id="playBtn" onclick="toggleAudio()">تشغيل السورة ▷</button>
+                
+                <div class="custom-player">
+                    <button id="playBtn" onclick="toggleAudio()">▷</button>
+                    <div class="progress-container">
+                        <span id="currentTime">0:00</span>
+                        <input type="range" id="seekSlider" value="0" max="100" oninput="seekAudio()">
+                        <span id="durationTime">0:00</span>
+                    </div>
                 </div>
                 <audio id="audioPlayer"></audio>
             </div>
