@@ -6,27 +6,43 @@
 }
 
 body { font-family: 'Amiri', serif; background-color: var(--bg-light); color: var(--dark-teal); margin: 0; direction: rtl; transition: 0.3s; }
-body.dark-mode { background-color: #121212; color: #e0e0e0; }
-
 header { background-color: var(--dark-teal); color: var(--gold); padding: 15px; text-align: center; border-bottom: 5px solid var(--gold); position: sticky; top: 0; z-index: 1000; }
-.main-nav { margin-top: 10px; }
+
 .main-nav button { background: transparent; border: 2px solid var(--gold); color: var(--gold); padding: 8px 15px; margin: 3px; border-radius: 20px; cursor: pointer; font-family: 'Amiri'; font-weight: bold; }
 .main-nav button.active { background: var(--gold); color: var(--dark-teal); }
 
 .container { max-width: 800px; margin: auto; padding: 15px; }
 
-.surah-grid, .azkar-categories { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-.surah-card, .zekr-card { background: var(--white); padding: 18px; border-right: 5px solid var(--gold); border-radius: 8px; cursor: pointer; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.05); transition: 0.2s; }
-.zekr-card { text-align: justify; text-align-last: center; margin-bottom: 15px; position: relative; }
-.zekr-card.done { opacity: 0.5; background: #e8f5e9; border-right-color: #2ecc71; pointer-events: none; }
-.zekr-card.done::after { content: "✓ تم القراءة"; position: absolute; top: 5px; left: 10px; color: #2ecc71; font-size: 0.8rem; font-weight: bold; }
+/* تنسيق اختيار القارئ المطور */
+.reciter-section { margin: 15px auto; position: relative; max-width: 280px; }
+#reciterSelect {
+    width: 100%; padding: 10px 15px; font-family: 'Amiri'; font-size: 1.1rem;
+    color: var(--white); background: var(--dark-teal); border: 2px solid var(--gold);
+    border-radius: 30px; appearance: none; cursor: pointer; text-align: center;
+}
+.reciter-section::after { content: '▼'; position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--gold); pointer-events: none; }
 
-.zekr-text { font-size: 1.25rem; line-height: 1.8; color: #333; margin-bottom: 10px; }
-.zekr-counter { background: var(--dark-teal); color: var(--gold); padding: 4px 12px; border-radius: 15px; font-weight: bold; display: inline-block; font-size: 0.9rem; }
+/* تنسيق بطاقات الأذكار المفصلة */
+.zekr-card { 
+    background: var(--white); padding: 25px; border-right: 6px solid var(--gold); 
+    border-radius: 12px; cursor: pointer; margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08); transition: 0.3s;
+    text-align: justify; text-align-last: center;
+}
+.zekr-card.done { background: #f0f9f1; border-right-color: #2ecc71; opacity: 0.7; }
+.zekr-text { font-size: 1.35rem; line-height: 2; color: #333; margin-bottom: 15px; }
+.zekr-counter { 
+    background: var(--dark-teal); color: var(--gold); padding: 5px 15px; 
+    border-radius: 20px; font-weight: bold; display: inline-block; font-size: 1rem;
+}
 
-/* باقي تنسيقات السبحة واللاعب كما هي لضمان استقرار الموقع */
-.sebha-circle { width: 180px; height: 180px; border-radius: 50%; background: var(--dark-teal); color: var(--gold); display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 20px auto; border: 6px solid var(--gold); cursor: pointer; box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-#sebhaCounter { font-size: 3.5rem; font-weight: bold; }
-.progress-bar-container { width: 100%; height: 12px; background: #eee; border-radius: 10px; overflow: hidden; margin: 15px 0; }
+/* البحث والسور */
+.search-box input { width: 100%; padding: 12px; border: 2px solid var(--gold); border-radius: 10px; margin-bottom: 20px; font-family: 'Amiri'; }
+.surah-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.surah-card { background: white; padding: 20px; border-right: 5px solid var(--gold); text-align: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+/* السبحة */
+.sebha-circle { width: 200px; height: 200px; border-radius: 50%; background: var(--dark-teal); color: var(--gold); display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 30px auto; border: 6px solid var(--gold); cursor: pointer; }
+#sebhaCounter { font-size: 4rem; font-weight: bold; }
+.progress-bar-container { width: 100%; height: 14px; background: #eee; border-radius: 10px; overflow: hidden; }
 .progress-bar { width: 0%; height: 100%; background: var(--gold); transition: 0.4s; }
-.reset-btn { border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; color: white; background: #e74c3c; font-family: 'Amiri'; }
