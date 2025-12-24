@@ -53,9 +53,27 @@ function showMain() {
 // --- 3. المشغل الصوتي المطور ---
 function updateAudioSource() {
     const r = document.getElementById('reciterSelect').value;
-    const srv = { 'afs': '8', 'minsh': '10', 'basit': '7', 'husr': '13' };
+    
+    // خريطة السيرفرات لكل قارئ (لكي يعمل الرابط بشكل صحيح)
+    const srv = { 
+        'afs': '8',     // العفاسي
+        'minsh': '10',   // المنشاوي
+        'basit': '7',    // عبد الباسط
+        'husr': '13',    // الحصري
+        'maher': '12',   // ماهر المعيقلي
+        'qtm': '11',     // ناصر القطامي
+        'yasser': '11'   // ياسر الدوسري
+    };
+
+    // تحديث رابط الصوت بناءً على القارئ المختار والسورة الحالية
     audio.src = `https://server${srv[r]}.mp3quran.net/${r}/${currentSurahId.toString().padStart(3, '0')}.mp3`;
+    
+    // إذا كان المشغل يعمل، قم بتشغيل القارئ الجديد فوراً
+    if (!audio.paused) {
+        audio.play();
+    }
 }
+
 
 function toggleAudio() {
     if (audio.paused) { audio.play(); playBtn.innerText = "||"; }
