@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حقيبة المؤمن - القرآن والأذكار</title>
+    <title>حقيبة المؤمن - الإصدار العصري</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -28,16 +28,18 @@
         </div>
 
         <div id="quran-view" style="display:none;">
-            <div class="top-controls">
-                <button class="back-btn" onclick="showMain()">← العودة</button>
-                <div class="text-tools">
-                    <button onclick="changeFontSize(2)">A+</button>
-                    <button onclick="changeFontSize(-2)">A-</button>
-                    <button id="darkModeBtn" onclick="toggleDarkMode()">🌙</button>
+            <div class="modern-header-tools">
+                <button class="icon-back-btn" onclick="showMain()" title="عودة">🔙</button>
+                <div class="center-tools">
+                    <button class="tool-btn" onclick="changeFontSize(2)">A+</button>
+                    <button class="tool-btn" onclick="changeFontSize(-2)">A-</button>
+                    <button id="darkModeBtn" class="tool-btn dark-toggle" onclick="toggleDarkMode()">🌙</button>
                 </div>
             </div>
-            <div class="player-container">
+
+            <div class="player-container modern-style">
                 <h2 id="current-surah-title"></h2>
+                
                 <div class="reciter-section">
                     <select id="reciterSelect" onchange="updateAudioSource()">
                         <option value="afs">🎙️ مشاري العفاسي</option>
@@ -46,16 +48,21 @@
                         <option value="husr">🎙️ محمود خليل الحصري</option>
                     </select>
                 </div>
-                <div class="custom-player">
-                    <button id="playBtn" onclick="toggleAudio()">▷</button>
-                    <div class="progress-container">
-                        <span id="currentTime">0:00</span>
-                        <input type="range" id="seekSlider" value="0" max="100" oninput="seekAudio()">
-                        <span id="durationTime">0:00</span>
+
+                <div class="modern-player-layout">
+                    <button id="playBtn" class="play-btn-small" onclick="toggleAudio()">▷</button>
+                    
+                    <div class="progress-wrapper">
+                        <span id="currentTime" class="time-label">0:00</span>
+                        <div class="slider-container">
+                            <input type="range" id="seekSlider" value="0" max="100" oninput="seekAudio()">
+                        </div>
+                        <span id="durationTime" class="time-label">0:00</span>
                     </div>
                 </div>
                 <audio id="audioPlayer"></audio>
             </div>
+            
             <div class="ayah-text" id="ayahsContainer"></div>
         </div>
     </div>
