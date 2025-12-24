@@ -32,6 +32,39 @@ header {
 
 .container { max-width: 800px; margin: auto; padding: 20px; }
 
+/* --- استعادة شكل شبكة السور (المهم جداً) --- */
+.surah-grid, .azkar-categories { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); /* بطاقتان في كل صف */
+    gap: 15px; 
+    margin-top: 20px;
+}
+
+/* في الشاشات الأكبر قليلاً */
+@media (min-width: 600px) {
+    .surah-grid, .azkar-categories { 
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+    }
+}
+
+.surah-card, .category-card { 
+    background: white; 
+    padding: 20px; 
+    border-right: 5px solid var(--gold); 
+    border-radius: 10px; 
+    text-align: center; 
+    cursor: pointer; 
+    font-weight: bold; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+}
+
+.surah-card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+
 /* أدوات التحكم العلوية العصرية */
 .modern-header-tools {
     display: flex; justify-content: space-between; align-items: center;
@@ -51,6 +84,7 @@ header {
 .player-container.modern-style {
     background: white; padding: 30px 20px; border-radius: 25px; 
     text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
 }
 .modern-player-layout { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 20px; }
 .play-btn-small {
@@ -73,18 +107,7 @@ header {
     border-radius: 12px; margin-bottom: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 .zekr-text { font-size: 1.5rem; line-height: 2.2; text-align: center; margin-bottom: 15px; }
-.zekr-counter { background: var(--dark-teal); color: var(--gold); padding: 5px 15px; border-radius: 20px; }
-
-/* السبحة */
-.timer-wrapper { text-align: center; margin-bottom: 20px; padding: 15px; border-radius: 15px; border: 1px dashed var(--gold); }
-.modern-timer { font-family: monospace; font-size: 1.8rem; font-weight: bold; color: #e74c3c; }
-.sebha-circle { 
-    width: 220px; height: 220px; border-radius: 50%; background: var(--dark-teal); 
-    color: var(--gold); display: flex; flex-direction: column; justify-content: center; 
-    align-items: center; margin: 30px auto; border: 8px solid var(--gold); cursor: pointer; 
-}
-#sebhaCounter { font-size: 4rem; font-weight: bold; }
-.modern-reset-btn { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; padding: 12px 25px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; }
+.zekr-counter { background: var(--dark-teal); color: var(--gold); padding: 5px 15px; border-radius: 20px; font-weight: bold; }
 
 /* الوضع الداكن الملكي */
 body.dark-mode { background-color: var(--black) !important; color: white !important; }
