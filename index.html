@@ -23,12 +23,17 @@
             <input type="text" id="searchInput" placeholder="ابحث عن سورة..." onkeyup="filterSurahs()">
         </div>
         <div id="main-view">
-            <div class="surah-grid" id="surahList">
-                <p>جاري تحميل السور...</p>
-            </div>
+            <div class="surah-grid" id="surahList"></div>
         </div>
         <div id="quran-view" style="display:none;">
-            <button class="back-btn" onclick="showMain()">← العودة للقائمة</button>
+            <div class="top-controls">
+                <button class="back-btn" onclick="showMain()">← العودة</button>
+                <div class="text-tools">
+                    <button onclick="changeFontSize(2)">A+</button>
+                    <button onclick="changeFontSize(-2)">A-</button>
+                    <button id="darkModeBtn" onclick="toggleDarkMode()">🌙</button>
+                </div>
+            </div>
             <div class="player-container">
                 <h2 id="current-surah-title"></h2>
                 <div class="reciter-section">
@@ -39,7 +44,6 @@
                         <option value="husr">محمود خليل الحصري</option>
                     </select>
                 </div>
-                
                 <div class="custom-player">
                     <button id="playBtn" onclick="toggleAudio()">▷</button>
                     <div class="progress-container">
