@@ -152,12 +152,22 @@ function loadAzkar(cat) {
 function countZekr(id) {
     const el = document.getElementById(`num-${id}`);
     if (!el) return;
+    
     let c = parseInt(el.innerText);
     if (c > 0) {
-        c--; el.innerText = c;
+        c--; 
+        el.innerText = c;
         localStorage.setItem(`zekr_${id}`, c);
-        if (c === 0) el.closest('.zekr-card').classList.add('done');
+        
+        // أول ما يوصل الصفر، نغير الألوان فوراً
+        if (c === 0) {
+            const card = el.closest('.zekr-card');
+            card.classList.add('completed');
+            card.classList.add('done'); // للمحافظة على الشفافية القديمة إذا كنت تبيها
+        }
     }
+}
+
 }
 
 function backToAzkarCats() {
