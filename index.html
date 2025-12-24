@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حقيبة المؤمن - القرآن والأذكار</title>
+    <title>حقيبة المؤمن</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -20,10 +20,13 @@
 
 <div class="container">
     <div id="quran-section">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="ابحث عن سورة..." onkeyup="filterSurahs()">
+        <div id="main-view">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="ابحث عن سورة..." onkeyup="filterSurahs()">
+            </div>
+            <div class="surah-grid" id="surahList"></div>
         </div>
-        <div id="main-view"><div class="surah-grid" id="surahList"></div></div>
+
         <div id="quran-view" style="display:none;">
             <div class="top-controls">
                 <button class="back-btn" onclick="showMain()">← العودة</button>
@@ -36,7 +39,7 @@
             <div class="player-container">
                 <h2 id="current-surah-title"></h2>
                 <div class="reciter-section">
-                    <select id="reciterSelect" onchange="changeReciter()">
+                    <select id="reciterSelect" onchange="updateAudioSource()">
                         <option value="afs">🎙️ مشاري العفاسي</option>
                         <option value="minsh">🎙️ محمد صديق المنشاوي</option>
                         <option value="basit">🎙️ عبد الباسط عبد الصمد</option>
@@ -59,40 +62,27 @@
 
     <div id="azkar-section" style="display:none;">
         <div class="azkar-categories" id="azkarCats">
-            <div class="surah-card" onclick="loadAzkar('morning')">☀️ أذكار الصباح</div>
-            <div class="surah-card" onclick="loadAzkar('evening')">🌙 أذكار المساء</div>
-            <div class="surah-card" onclick="loadAzkar('sleep')">🛌 أذكار النوم</div>
+            <div class="category-card" onclick="loadAzkar('morning')">☀️ أذكار الصباح</div>
+            <div class="category-card" onclick="loadAzkar('evening')">🌙 أذكار المساء</div>
+            <div class="category-card" onclick="loadAzkar('sleep')">🛌 أذكار النوم</div>
         </div>
         <div id="azkar-content" style="display:none;">
             <div class="top-controls">
                 <button class="back-btn" onclick="backToAzkarCats()">← العودة</button>
-                <button class="reset-btn" style="background:#f39c12" onclick="resetAzkarProgress()">تصفير الأذكار</button>
+                <button class="reset-btn" onclick="resetAzkarProgress()">تصفير</button>
             </div>
-            <h2 id="azkar-title" style="text-align:center; color: var(--dark-teal); margin-bottom: 20px;"></h2>
+            <h2 id="azkar-title"></h2>
             <div id="azkarList"></div>
         </div>
     </div>
 
     <div id="sebha-section" style="display:none;">
         <div class="sebha-container">
-            <p id="resetTimerText">تصفير تلقائي بعد: <span id="resetTimer">--:--:--</span></p>
-            <div class="goal-selector">
-                <span>الهدف اليومي: </span>
-                <select id="sebhaGoal" onchange="setSebhaGoal()">
-                    <option value="100">100</option>
-                    <option value="500">500</option>
-                    <option value="1000" selected>1000</option>
-                </select>
-            </div>
             <div class="sebha-circle" onclick="incrementSebha()">
                 <span id="sebhaCounter">0</span>
                 <small>اضغط للتسبيح</small>
             </div>
-            <div class="progress-bar-container">
-                <div id="sebhaProgress" class="progress-bar"></div>
-            </div>
-            <p id="goalText">المتبقي للهدف: 1000</p>
-            <button class="reset-btn" onclick="resetSebha()">تصفير يدوي</button>
+            <button class="reset-btn" onclick="resetSebha()">تصفير العداد</button>
         </div>
     </div>
 </div>
