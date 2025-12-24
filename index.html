@@ -1,8 +1,18 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>القرآن الكريم - بصوت العفاسي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
 <header>
-    <h1>القرآن الكريم</h1>
-    <p>بصوت الشيخ منصور السالمي</p>
-    
-    <div class="search-container">
+    <h1>موقع القرآن الكريم</h1>
+    <p>تلاوة الشيخ مشاري العفاسي</p>
+    <div class="search-box">
         <input type="text" id="searchInput" placeholder="ابحث عن سورة..." onkeyup="filterSurahs()">
     </div>
 </header>
@@ -12,18 +22,17 @@
         <div class="surah-grid" id="surahList"></div>
     </div>
 
-    <div id="quran-display">
-        <button class="back-btn" onclick="goBack()">← العودة للقائمة</button>
-        
-        <div id="surah-header">
-            <h2 id="surah-title"></h2>
-            <div class="audio-controls">
-                <button id="playBtn" onclick="toggleAudio()">تشغيل السورة ▷</button>
-                <audio id="mainAudio"></audio>
-            </div>
+    <div id="quran-view" style="display:none;">
+        <button class="back-btn" onclick="showMain()">← العودة</button>
+        <div class="controls">
+            <h2 id="current-surah-title"></h2>
+            <button id="playBtn" onclick="toggleAudio()">تشغيل السورة ▷</button>
+            <audio id="audioPlayer"></audio>
         </div>
-
-        <div class="bismillah" id="bismillah-text">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
-        <div class="ayah-text" id="ayahs-container"></div>
+        <div class="ayah-text" id="ayahsContainer"></div>
     </div>
 </div>
+
+<script src="script.js"></script>
+</body>
+</html>
