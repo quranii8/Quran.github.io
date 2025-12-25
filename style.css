@@ -135,6 +135,7 @@ body.dark-mode .modern-reset-soft {
 /* دعم الوضع المظلم */
 body.dark-mode .p-card { background: #1a1a1a; }
 body.dark-mode .p-card b { color: white; }
+
 .qibla-container {
     background: radial-gradient(circle, var(--dark-teal), #052e2e);
     color: var(--gold);
@@ -192,32 +193,3 @@ body.dark-mode .p-card b { color: white; }
     font-weight: bold;
     margin-top: 15px;
 }
-#compass-pointer {
-    /* هذا السطر هو السر في سلاسة الحركة */
-    transition: transform 0.1s linear !important; 
-}
-.settings-btn-small {
-    background: var(--dark-teal);
-    color: var(--gold);
-    border: 1px solid var(--gold);
-    padding: 5px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    transition: all 0.3s ease;
-}
-
-.settings-btn-small:hover {
-    background: var(--gold);
-    color: var(--dark-teal);
-}
-
-/* تنسيق السطر داخل القائمة */
-.setting-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-}
-
