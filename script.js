@@ -411,29 +411,30 @@ function switchMainTab(t) {
 
 // دالة جلب آية عشوائية
 async function generateDailyAyah() {
-    const ayahText = document.getElementById('daily-ayah-text');
-    const ayahInfo = document.getElementById('daily-ayah-info');
+    const textEl = document.getElementById('daily-ayah-text');
+    const infoEl = document.getElementById('daily-ayah-info');
     
-    // اختيار رقم آية عشوائي (القرآن فيه 6236 آية)
-    const randomAyah = Math.floor(Math.random() * 6236) + 1;
-    
+    if (!textEl) return;
+
+    // إضافة تأثير اختفاء بسيط عند التحميل
+    textEl.style.opacity = "0.5";
+
     try {
-        const response = await fetch(`https://api.alquran.cloud/v1/ayah/${randomAyah}/ar.alafasy`);
+        const random = Math.floor(Math.random() * 6236) + 1;
+        const response = await fetch(`https://api.alquran.cloud/v1/ayah/${random}`);
         const data = await response.json();
         
-        if (data.code === 200) {
-            const ayah = data.data;
-            ayahText.innerText = ayah.text;
-            ayahInfo.innerText = `[ سورة ${ayah.surah.name} - آية ${ayah.numberInSurah} ]`;
-        }
-    } catch (error) {
-        ayahText.innerText = "لا يوجد اتصال بالإنترنت لجلب الآية";
+        textEl.innerText = data.data.text;
+        infoEl.innerText = `سورة ${data.data.surah.name} • آية ${data.data.numberInSurah}`;
+        textEl.style.opacity = "1";
+    } catch (err) {
+        textEl.innerText = "لا إله إلا أنت سبحانك إني كنت من الظالمين";
+        textEl.style.opacity = "1";
     }
 }
 
-// تشغيل الدالة تلقائياً عند فتح التطبيق
-window.onload = () => {
-    generateDailyAyah();
-    // إذا كان عندك وظائف ثانية تشتغل عند التحميل أضفها هنا
-};
+// تشغيل عند التحميل
+document.addEventListener('DOMContentLoaded', generateDailyAyah);
+// تنفيذ احتياطي فوراً
+setTimeout(generateDailyAyah, 500);
 
