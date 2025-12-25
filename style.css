@@ -3,17 +3,13 @@
     --gold: #C9B07A;
     --bg: #fdfcf9;
     --black: #000000;
-    --success: #28a745; /* لون النجاح الأخضر */
+    --success: #28a745;
 }
 
 body { font-family: 'Amiri', serif; background: var(--bg); color: var(--dark-teal); margin: 0; direction: rtl; transition: 0.4s; }
 
-/* القائمة الجانبية - مخفية تماماً */
-.side-menu {
-    position: fixed; top: 0; left: -320px; width: 260px; height: 100%;
-    background: var(--dark-teal); color: var(--gold); z-index: 2000;
-    transition: all 0.4s ease-in-out; padding: 25px; visibility: hidden;
-}
+/* القائمة الجانبية */
+.side-menu { position: fixed; top: 0; left: -320px; width: 260px; height: 100%; background: var(--dark-teal); color: var(--gold); z-index: 2000; transition: all 0.4s ease-in-out; padding: 25px; visibility: hidden; }
 .side-menu.open { left: 0; visibility: visible; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
 .menu-icon { position: absolute; right: 20px; top: 22px; font-size: 28px; cursor: pointer; color: var(--gold); z-index: 1001; }
 .close-btn { background: none; border: none; color: white; font-size: 35px; cursor: pointer; }
@@ -26,37 +22,41 @@ header { background: var(--dark-teal); color: var(--gold); padding: 20px 10px; t
 .main-nav button { background: transparent; border: 1.5px solid var(--gold); color: var(--gold); padding: 6px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
 .main-nav button.active { background: var(--gold); color: var(--dark-teal); }
 
-/* شبكة السور - مربعات أنيقة */
-.surah-grid, .azkar-categories { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px; margin-top: 15px; }
-.surah-card, .category-card { 
-    background: white; padding: 15px 10px; border-right: 4px solid var(--gold); border-radius: 8px; 
-    text-align: center; cursor: pointer; font-weight: bold; font-size: 0.95rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    display: flex; align-items: center; justify-content: center; min-height: 55px; transition: 0.3s;
-}
+/* شبكة السور */
+.surah-grid, .azkar-categories { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px; margin-top: 15px; padding: 10px; }
+.surah-card, .category-card { background: white; padding: 15px 10px; border-right: 4px solid var(--gold); border-radius: 8px; text-align: center; cursor: pointer; font-weight: bold; font-size: 0.95rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; min-height: 55px; }
 
-/* المشغل - نحيف */
-.player-container.modern-style { background: white; padding: 15px 20px; border-radius: 15px; margin-bottom: 10px; text-align: center; border: 1px solid rgba(201, 176, 122, 0.2); }
-.play-btn-small { width: 55px; height: 55px; border-radius: 50%; background: var(--dark-teal); color: var(--gold); border: 2px solid var(--gold); font-size: 1.4rem; cursor: pointer; margin-bottom: 10px; }
-#reciterSelect { padding: 5px; border-radius: 10px; border: 1px solid var(--gold); background: var(--bg); color: var(--dark-teal); font-family: 'Amiri'; margin-bottom: 10px; }
+/* المشغل الصوتي */
+.player-container.modern-style { background: white; padding: 15px 20px; border-radius: 15px; margin: 10px; text-align: center; border: 1px solid rgba(201, 176, 122, 0.2); }
+.play-btn-small { width: 55px; height: 55px; border-radius: 50%; background: var(--dark-teal); color: var(--gold); border: 2px solid var(--gold); font-size: 1.4rem; cursor: pointer; }
+#reciterSelect { padding: 5px; border-radius: 10px; border: 1px solid var(--gold); background: var(--bg); color: var(--dark-teal); font-family: 'Amiri'; margin-bottom: 10px; width: 100%; }
 #seekSlider { width: 100%; accent-color: var(--dark-teal); height: 4px; }
 
-/* نصوص الآيات */
-.ayah-text { background: white; padding: 25px; border-radius: 12px; font-size: 1.7rem; line-height: 2.3; text-align: center; margin-top: 5px; border: 1px solid rgba(201, 176, 122, 0.1); }
+/* الآيات */
+.ayah-text { background: white; padding: 25px; border-radius: 12px; font-size: 1.7rem; line-height: 2.3; text-align: center; margin: 10px; border: 1px solid rgba(201, 176, 122, 0.1); }
 
-/* الأذكار - مع ميزة اللون الأخضر عند الانتهاء */
-.zekr-card { background: white; padding: 15px; border-right: 6px solid var(--gold); border-radius: 10px; margin-bottom: 12px; cursor: pointer; transition: 0.5s; }
+/* الأذكار */
+.zekr-card { background: white; padding: 15px; border-right: 6px solid var(--gold); border-radius: 10px; margin: 10px; cursor: pointer; transition: 0.5s; }
 .zekr-card.completed { border-right-color: var(--success) !important; background-color: rgba(40, 167, 69, 0.05) !important; }
 .zekr-card.completed .zekr-counter { background-color: var(--success) !important; color: white !important; }
-
 .zekr-text { font-size: 1.4rem; line-height: 2; text-align: center; margin-bottom: 10px; }
-.zekr-counter { background: var(--dark-teal); color: var(--gold); padding: 4px 15px; border-radius: 15px; font-size: 0.9rem; transition: 0.3s; }
+.zekr-counter { background: var(--dark-teal); color: var(--gold); padding: 4px 15px; border-radius: 15px; font-size: 0.9rem; }
 
-/* السبحة */
-.sebha-circle { width: 180px; height: 180px; border-radius: 50%; background: var(--dark-teal); color: var(--gold); display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 30px auto; border: 6px solid var(--gold); cursor: pointer; }
+/* السبحة المحدثة */
+.goal-setting { text-align: center; margin: 15px 0; font-weight: bold; }
+#sebhaGoal { width: 60px; padding: 5px; border: 1px solid var(--gold); border-radius: 5px; text-align: center; background: white; color: var(--dark-teal); }
+
+.progress-container { width: 80%; background: #eee; height: 10px; border-radius: 10px; margin: 10px auto; overflow: hidden; }
+.progress-bar { width: 0%; height: 100%; background: var(--gold); transition: 0.3s; }
+
+.sebha-circle { width: 180px; height: 180px; border-radius: 50%; background: var(--dark-teal); color: var(--gold); display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 20px auto; border: 8px solid var(--gold); cursor: pointer; transition: 0.2s; }
+.sebha-circle:active { transform: scale(0.95); }
+.sebha-circle.goal-reached { border-color: var(--success); box-shadow: 0 0 20px var(--success); }
+
+.modern-reset-btn { display: block; margin: 10px auto; background: #e74c3c; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+
+.modern-timer { font-family: sans-serif; font-weight: bold; color: var(--gold); background: var(--dark-teal); padding: 5px 15px; border-radius: 10px; display: inline-block; }
 
 /* الوضع الداكن */
 body.dark-mode { background: var(--black) !important; color: white !important; }
-body.dark-mode .surah-card, body.dark-mode .category-card, body.dark-mode .player-container, body.dark-mode .ayah-text, body.dark-mode .zekr-card {
-    background: #111 !important; border-color: var(--gold); color: white !important;
-}
-body.dark-mode .zekr-card.completed { border-right-color: var(--success) !important; }
+body.dark-mode .surah-card, body.dark-mode .category-card, body.dark-mode .player-container, body.dark-mode .ayah-text, body.dark-mode .zekr-card { background: #111 !important; border-color: var(--gold); color: white !important; }
