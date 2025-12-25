@@ -193,3 +193,6 @@ body.dark-mode .p-card b { color: white; }
     font-weight: bold;
     margin-top: 15px;
 }
+#compass-pointer {
+    transition: transform 0.1s linear, background-color 0.3s ease; /* حركة انسيابية جداً */
+}
