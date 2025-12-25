@@ -192,4 +192,8 @@ body.dark-mode .p-card b { color: white; }
     font-weight: bold;
     margin-top: 15px;
 }
+#compass-pointer {
+    /* هذا السطر هو السر في سلاسة الحركة */
+    transition: transform 0.1s linear !important; 
+}
 
