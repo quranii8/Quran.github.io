@@ -60,3 +60,45 @@ header { background: var(--dark-teal); color: var(--gold); padding: 20px 10px; t
 /* الوضع الداكن */
 body.dark-mode { background: var(--black) !important; color: white !important; }
 body.dark-mode .surah-card, body.dark-mode .category-card, body.dark-mode .player-container, body.dark-mode .ayah-text, body.dark-mode .zekr-card { background: #111 !important; border-color: var(--gold); color: white !important; }
+/* زر العودة */
+.modern-back-btn {
+    background: transparent;
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    padding: 7px 20px;
+    border-radius: 25px;
+    font-family: 'Amiri';
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.modern-back-btn:hover {
+    background: var(--gold);
+    color: var(--dark-teal);
+}
+
+/* زر التصفير */
+.modern-reset-soft {
+    background: rgba(201,176,122,0.15);
+    color: var(--dark-teal);
+    border: 1.5px solid var(--gold);
+    padding: 7px 20px;
+    border-radius: 20px;
+    font-family: 'Amiri';
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.modern-reset-soft:hover {
+    background: var(--gold);
+    color: var(--dark-teal);
+}
+
+/* الوضع الداكن */
+body.dark-mode .modern-back-btn,
+body.dark-mode .modern-reset-soft {
+    color: var(--gold);
+    border-color: var(--gold);
+}
