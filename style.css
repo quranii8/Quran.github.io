@@ -108,4 +108,31 @@ body.dark-mode .modern-reset-soft {
     align-items: center;
     gap: 6px;
 }
+.prayer-hero-card {
+    background: var(--dark-teal);
+    color: var(--gold);
+    padding: 25px;
+    border-radius: 20px;
+    margin: 20px 0;
+    border: 2px solid var(--gold);
+}
+.big-timer { font-size: 3rem; font-weight: bold; font-family: sans-serif; }
+.prayer-detailed-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 15px;
+}
+.p-card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    border-bottom: 4px solid var(--gold);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+.p-card span { display: block; font-size: 0.85rem; color: #777; font-weight: bold; }
+.p-card b { font-size: 1.2rem; color: var(--dark-teal); }
+
+/* دعم الوضع المظلم */
+body.dark-mode .p-card { background: #1a1a1a; }
+body.dark-mode .p-card b { color: white; }
 
