@@ -385,32 +385,34 @@ function askCompassPermission() {
         window.addEventListener('deviceorientation', handleCompass, true);
     }
 }
-
 function handleCompass(e) {
-    // الحصول على اتجاه الجهاز (heading)
+    // الحصول على اتجاه الجهاز الحقيقي (Heading)
     let heading = e.webkitCompassHeading || (360 - e.alpha);
     if (heading === undefined) return;
 
     const pointer = document.getElementById('compass-pointer');
     const statusText = document.getElementById('qibla-status');
 
-    // 3. تحريك السهم الذهبي ليدل على اتجاه الجوال الحالي
+    // السهم الذهبي الآن يمثل اتجاه الجهاز الحالي
+    // نقوم بتدويره عكس اتجاه الشمال ليظل ثابتاً في يده
     pointer.style.transform = `translate(-50%, -100%) rotate(${-heading}deg)`;
 
-    // 4. حساب الفرق بين اتجاه الجوال والقبلة للمطابقة
-    const diff = Math.abs((360 - heading) % 360 - finalQiblaAngle);
-    
-    // إذا تطابق السهم الذهبي مع الأخضر (فرق أقل من 7 درجات)
+    // حساب الفرق بين زاوية الجهاز وزاوية مكة
+    // القبلة تكون صحيحة عندما ينطبق السهم الذهبي (اتجاهك) فوق السهم الأخضر (مكة)
+    const diff = Math.abs(((-heading + 360) % 360) - (finalQiblaAngle % 360));
+
+    // إذا كان الفرق أقل من 7 درجات (تطابق)
     if (diff < 7 || diff > 353) {
-        pointer.style.backgroundColor = "#27ae60"; // يتغير للأخضر عند المطابقة
-        pointer.style.boxShadow = "0 0 20px #27ae60";
-        statusText.innerHTML = "<span style='color:#27ae60; font-weight:bold;'>تمت المطابقة! أنت باتجاه القبلة ✅</span>";
+        pointer.style.backgroundColor = "#27ae60"; 
+        pointer.style.boxShadow = "0 0 20px rgba(39, 174, 96, 0.5)";
+        statusText.innerHTML = "<span style='color:#27ae60; font-weight:bold;'>أنت باتجاه القبلة الآن ✅</span>";
     } else {
         pointer.style.backgroundColor = "var(--gold)";
         pointer.style.boxShadow = "none";
-        statusText.innerHTML = "<span style='color:var(--gold);'>طابق السهم الذهبي فوق الأخضر</span>";
+        statusText.innerHTML = "<span style='color:var(--gold);'>دوّر الجوال حتى ينطبق السهمين</span>";
     }
 }
+
 
 // دالة التبديل الشاملة بين الأقسام
 function switchMainTab(t) {
