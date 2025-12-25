@@ -335,80 +335,85 @@ function startPrayerCountdown() {
 }
 // --- 7. وظائف القبلة (نسخة السرعة القصوى) ---
 let finalQiblaAngle = 0; // متغير لحفظ زاوية مكة
+let finalQiblaAngle = 0;
 
 function getQibla() {
     if (navigator.geolocation) {
-        document.getElementById('qibla-status').innerText = "جاري التحديد...";
-
+        document.getElementById('qibla-status').innerText = "جاري تحديد الموقع...";
+        
         navigator.geolocation.getCurrentPosition(position => {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
-            
-            // حساب زاوية مكة
+
+            // حساب الزاوية
             const phiK = 21.4225 * Math.PI / 180;
             const lambdaK = 39.8262 * Math.PI / 180;
             const phi = lat * Math.PI / 180;
             const lambda = lng * Math.PI / 180;
             let qDeg = Math.atan2(Math.sin(lambdaK - lambda), Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda));
             finalQiblaAngle = (qDeg * 180 / Math.PI + 360) % 360;
-            
-            document.getElementById('qibla-deg').innerText = Math.round(finalQiblaAngle);
-            document.getElementById('qibla-status').innerText = "دوّر الجوال لضبط الاتجاه";
 
-            // تشغيل الحساس الحركي
-            startCompassTracking();
+            document.getElementById('qibla-deg').innerText = Math.round(finalQiblaAngle);
+            
+            // إضافة زر التفعيل لمستخدمي آبل (ضروري لعمل السهم)
+            document.getElementById('qibla-status').innerHTML = `
+                <button onclick="activateCompass()" style="background:var(--gold); color:var(--dark-teal); border:none; padding:8px 15px; border-radius:10px; font-weight:bold; cursor:pointer;">
+                    تفعيل حركة البوصلة 🧭
+                </button>`;
         }, (err) => {
-            document.getElementById('qibla-status').innerText = "يرجى تفعيل الموقع";
+            document.getElementById('qibla-status').innerText = "يرجى السماح بالوصول للموقع";
         }, { enableHighAccuracy: false, timeout: 5000 });
     }
 }
 
-function startCompassTracking() {
-    const handler = (e) => {
-        // الحصول على اتجاه الشمال من حساس الجوال
-        let compassHeading = e.webkitCompassHeading || (360 - e.alpha);
-        
-        if (compassHeading !== undefined) {
-            // حساب الزاوية المطلوبة للسهم
-            const arrowRotation = finalQiblaAngle - compassHeading;
-            
-            const pointer = document.getElementById('compass-pointer');
-            const statusText = document.getElementById('qibla-status');
-
-            if (pointer) {
-                pointer.style.transform = `translate(-50%, -100%) rotate(${arrowRotation}deg)`;
-
-                // "الإشارة الاحترافية": إذا كان السهم قريباً من القبلة (بفرق أقل من 5 درجات)
-                const isCorrect = Math.abs(arrowRotation % 360) < 5 || Math.abs(arrowRotation % 360) > 355;
-                
-                if (isCorrect) {
-                    pointer.style.backgroundColor = "#27ae60"; // أخضر عند الاتجاه الصحيح
-                    pointer.style.boxShadow = "0 0 15px #27ae60";
-                    statusText.innerText = "أنت باتجاه القبلة الآن ✅";
-                    statusText.style.color = "#27ae60";
-                    if(window.navigator.vibrate) window.navigator.vibrate(50); // اهتزاز خفيف (اختياري)
-                } else {
-                    pointer.style.backgroundColor = "var(--gold)"; // ذهبي في باقي الحالات
-                    pointer.style.boxShadow = "none";
-                    statusText.innerText = "دوّر الجوال لضبط الاتجاه";
-                    statusText.style.color = "var(--gold)";
+// دالة تفعيل الحساس (يجب أن تستدعى بحدث من المستخدم)
+function activateCompass() {
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        // خاص بمتصفح سفاري وآيفون
+        DeviceOrientationEvent.requestPermission()
+            .then(permissionState => {
+                if (permissionState === 'granted') {
+                    window.addEventListener('deviceorientation', handleCompass, true);
                 }
-            }
-        }
-    };
-
-    // طلب الإذن في آيفون (iOS) لأن له شروط خاصة
-    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission().then(state => {
-            if (state === 'granted') {
-                window.addEventListener("deviceorientation", handler, true);
-            }
-        });
+            })
+            .catch(console.error);
     } else {
-        window.addEventListener("deviceorientationabsolute", handler, true);
-        window.addEventListener("deviceorientation", handler, true);
+        // الأجهزة الأخرى (أندرويد)
+        window.addEventListener('deviceorientationabsolute', handleCompass, true);
+        window.addEventListener('deviceorientation', handleCompass, true);
     }
 }
+
+function handleCompass(event) {
+    // الحصول على اتجاه الجهاز
+    let heading = event.webkitCompassHeading || (360 - event.alpha);
+    
+    if (heading !== undefined) {
+        // حساب زاوية السهم (موقع مكة بالنسبة لاتجاه الجوال الحالي)
+        const arrowRotation = finalQiblaAngle - heading;
+        
+        const pointer = document.getElementById('compass-pointer');
+        const statusText = document.getElementById('qibla-status');
+
+        if (pointer) {
+            pointer.style.transform = `translate(-50%, -100%) rotate(${arrowRotation}deg)`;
+
+            // "الإشارة الاحترافية": تحديد الاتجاه الصحيح
+            const isCorrect = Math.abs(arrowRotation % 360) < 5 || Math.abs(arrowRotation % 360) > 355;
+            
+            if (isCorrect) {
+                pointer.style.backgroundColor = "#27ae60"; // أخضر
+                pointer.style.boxShadow = "0 0 20px #27ae60";
+                statusText.innerHTML = "<span style='color:#27ae60; font-weight:bold;'>أنت باتجاه القبلة الآن ✅</span>";
+            } else {
+                pointer.style.backgroundColor = "var(--gold)"; 
+                pointer.style.boxShadow = "none";
+                statusText.innerHTML = "<span style='color:var(--gold);'>دوّر الجوال لضبط الاتجاه</span>";
+            }
+        }
+    }
+}
+
 
 
 // دالة التبديل الشاملة (النسخة الوحيدة التي تحتاجها)
