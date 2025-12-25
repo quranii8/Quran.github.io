@@ -355,11 +355,12 @@ function getQibla() {
             document.getElementById('qibla-deg').innerText = Math.round(finalQiblaAngle);
 
             // 1. تثبيت السهم الأخضر (الهدف) على زاوية القبلة فوراً
-            const targetArrow = document.getElementById('qibla-target-arrow');
-            if (targetArrow) {
-                targetArrow.style.transform = `translate(-50%, -100%) rotate(${finalQiblaAngle}deg)`;
-            }
-            
+           // ابحث عن هذا السطر داخل getQibla واستبدله
+const targetArrow = document.getElementById('qibla-target-arrow');
+if (targetArrow) {
+    targetArrow.style.transform = `translate(-50%, -100%) rotate(${finalQiblaAngle}deg)`;
+}
+
             // 2. إظهار زر التفعيل لمستخدمي الآيفون
             document.getElementById('qibla-status').innerHTML = `
                 <button onclick="askCompassPermission()" style="background:var(--gold); color:var(--dark-teal); border:none; padding:8px 15px; border-radius:10px; font-weight:bold; cursor:pointer; font-family:inherit;">
