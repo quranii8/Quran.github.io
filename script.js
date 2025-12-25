@@ -1,4 +1,4 @@
-let allSurahs = [], currentSurahId = 1;
+Let allSurahs = [], currentSurahId = 1;
 let isMuted = localStorage.getItem('isMuted') === 'true';
 const audio = document.getElementById('audioPlayer');
 const playBtn = document.getElementById('playBtn');
@@ -251,6 +251,12 @@ function resetSebhaAutomated() {
 setInterval(updateCountdown, 1000);
 
 // --- 6. الوضع الداكن والخط والتبديل ---
+function switchMainTab(t) {
+    document.querySelectorAll('.main-nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(t + 'Tab').classList.add('active');
+    ['quran-section', 'azkar-section', 'sebha-section'].forEach(s => { 
+        document.getElementById(s).style.display = s.startsWith(t) ? 'block' : 'none'; 
+    });
 }
 
 function toggleDarkMode() { document.body.classList.toggle('dark-mode'); }
@@ -268,22 +274,34 @@ updateProgress();
 updateCountdown();
 let prayerTimesData = null;
 
-// 1. جلب المواقيت بناءً على موقع المستخ// استبدل دالة fetchPrayers بالكامل بهذا الكودfunction fetchPrayers() {
+// 1. جلب المواقيت بناءً على موقع المستخ// استبدل دالة fetchPrayers بالكامل بهذا الكود
+function fetchPrayers() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
             const url = `https://api.aladhan.com/v1/timings?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&method=4`;
             fetch(url).then(res => res.json()).then(data => {
                 const d = data.data;
                 prayerTimesData = d.timings;
+                
+                // تحديث جدول المواقيت والعداد
                 updatePrayerUI();
                 startPrayerCountdown();
                 
-                // إضافة هذه الأسطر لتحديث التاريخ
-                document.getElementById('hijri-date').innerText = `${d.date.hijri.day} ${d.date.hijri.month.ar} ${d.date.hijri.year}`;
-                document.getElementById('gregorian-date').innerText = d.date.gregorian.date;
-                document.getElementById('current-day').innerText = d.date.hijri.weekday.ar;
+                // تحديث شريط التاريخ الهجري والميلادي
+                const hijri = d.date.hijri;
+                const greg = d.date.gregorian;
+                
+                document.getElementById('hijri-date').innerText = `${hijri.day} ${hijri.month.ar} ${hijri.year}`;
+                document.getElementById('gregorian-date').innerText = greg.date;
+                document.getElementById('current-day').innerText = hijri.weekday.ar;
+            });
+        }, (err) => {
+            document.getElementById('next-prayer-name').innerText = "يرجى تفعيل الموقع للمواقيت";
+        });
+    }
 }
-
+}
+}
 
 // 2. تحديث جدول الأوقات
 function updatePrayerUI() {
@@ -393,7 +411,18 @@ function moveCompass(e) {
         status.innerText = "ضع السهم الذهبي فوق الأخضر";
     }
 }
-// دالة التبديل (تأكد من وجود ن}
+
+// دالة التبديل (تأكد من وجود نسخة واحدة منها فقط)
+function switchMainTab(t) {
+    ['quran', 'azkar', 'sebha', 'prayer', 'qibla'].forEach(tab => {
+        const sec = document.getElementById(tab + '-section');
+        const btn = document.getElementById(tab + 'Tab');
+        if (sec) sec.style.display = (tab === t) ? 'block' : 'none';
+        if (btn) btn.classList.toggle('active', tab === t);
+    });
+    if (t === 'qibla') getQibla();
+    if (t === 'prayer') fetchPrayers();
+}
 
 // دالة جلب آية عشوائية
 async function generateDailyAyah() {
@@ -420,40 +449,8 @@ async function generateDailyAyah() {
 }
 
 // تشغيل عند التحميل
-document.addEventListener('DOMContentLoaded', () => {
-    generateDailyAyah();
-    updateProgress(); // لتحديث بار السبحة عند الفتح
-});
-
+document.addEventListener('DOMContentLoaded', generateDailyAyah);
 // تنفيذ احتياطي فوراً
 setTimeout(generateDailyAyah, 500);
-// النسخة الشاملة والوحيدة لتبديل الأقسام
-function switchMainTab(t) {
-    // 1. تغيير حالة الأزرار (إضافة active للزر المختار)
-    document.querySelectorAll('.main-nav button').forEach(b => b.classList.remove('active'));
-    const activeBtn = document.getElementById(t + 'Tab');
-    if (activeBtn) activeBtn.classList.add('active');
 
-    // 2. إخفاء كل الأقسام وإظهار القسم المطلوب فقط
-    const sections = ['quran', 'azkar', 'sebha', 'prayer', 'qibla'];
-    sections.forEach(s => {
-        const sectionElement = document.getElementById(s + '-section');
-        if (sectionElement) {
-            sectionElement.style.display = (s === t) ? 'block' : 'none';
-        }
-    });
-
-    // 3. تشغيل الوظائف الخاصة بكل قسم عند فتحه
-    if (t === 'qibla') {
-        getQibla(); // تشغيل حسابات القبلة
-    }
-    if (t === 'prayer') {
-        fetchPrayers(); // تحديث المواقيت والتاريخ
-    }
-    
-    // إخفاء عرض السورة إذا كنا في قسم القرآن ورجعنا للرئيسية
-    if (t === 'quran') {
-        showMain(); 
-    }
-}
-
+الملف هذا تبعي قلي اش اغير ووين
