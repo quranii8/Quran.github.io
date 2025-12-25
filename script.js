@@ -5,7 +5,7 @@ const playBtn = document.getElementById('playBtn');
 const seekSlider = document.getElementById('seekSlider');
 const notifySound = document.getElementById('notificationSound');
 
-// --- 1. القائمة الجانبية والإعدادات ---
+‎// --- 1. القائمة الجانبية والإعدادات ---
 function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
 function toggleMute() { 
     isMuted = !isMuted; 
@@ -19,7 +19,7 @@ function playNotify() {
     } 
 }
 
-// --- 2. القرآن الكريم ---
+‎// --- 2. القرآن الكريم ---
 fetch('https://api.alquran.cloud/v1/surah').then(res => res.json()).then(data => { 
     allSurahs = data.data; 
     displaySurahs(allSurahs); 
@@ -77,7 +77,7 @@ audio.ontimeupdate = () => {
 function seekAudio() { audio.currentTime = (seekSlider.value / 100) * audio.duration; }
 function formatTime(s) { const m = Math.floor(s/60); const sc = Math.floor(s%60); return `${m}:${sc<10?'0'+sc:sc}`; }
 
-// --- 3. قاعدة بيانات الأذكار والأدعية (موسعة ومفصلة) ---
+‎// --- 3. قاعدة بيانات الأذكار والأدعية (موسعة ومفصلة) ---
 const azkarData = {
     morning: [
         { id: "m1", text: "أعوذ بالله من الشيطان الرجيم: {اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحيطُونَ بِشَيْءٍ مِنْ عليمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ}", count: 1 },
@@ -133,7 +133,7 @@ const azkarData = {
     ]
 };
 
-// --- 4. وظائف الأذكار ---
+‎// --- 4. وظائف الأذكار ---
 function loadAzkar(cat) {
     document.getElementById('azkarCats').style.display = 'none';
     document.getElementById('azkar-content').style.display = 'block';
@@ -184,7 +184,7 @@ function resetAzkarProgress() {
     } 
 }
 
-// --- 5. السبحة والعداد التلقائي ---
+‎// --- 5. السبحة والعداد التلقائي ---
 let sCount = parseInt(localStorage.getItem('sebhaCount')) || 0;
 let sGoal = parseInt(localStorage.getItem('sebhaGoal')) || 100;
 
@@ -250,7 +250,7 @@ function resetSebhaAutomated() {
 
 setInterval(updateCountdown, 1000);
 
-// --- 6. الوضع الداكن والخط والتبديل ---
+‎// --- 6. الوضع الداكن والخط والتبديل ---
 function switchMainTab(t) {
     document.querySelectorAll('.main-nav button').forEach(b => b.classList.remove('active'));
     document.getElementById(t + 'Tab').classList.add('active');
@@ -266,7 +266,7 @@ function changeFontSize(d) {
     el.style.fontSize = (parseFloat(s) + d) + 'px'; 
 }
 
-// --- تهيئة التشغيل ---
+‎// --- تهيئة التشغيل ---
 document.getElementById('sebhaCounter').innerText = sCount;
 document.getElementById('sebhaGoal').value = sGoal;
 document.getElementById('muteBtn').innerText = isMuted ? "🔇" : "🔊";
@@ -274,22 +274,36 @@ updateProgress();
 updateCountdown();
 let prayerTimesData = null;
 
-// 1. جلب المواقيت بناءً على موقع المستخ// استبدل دالة fetchPrayers بالكامل بهذا الكود
-
-‏function fetchPrayers() {
-‏    if (navigator.geolocation) {
-‏        navigator.geolocation.getCurrentPosition(pos => {
-‏            const url = `https://api.aladhan.com/v1/timings?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&method=4`;
-‏            fetch(url).then(res => res.json()).then(data => {
-‏                prayerTimesData = data.data.timings;
-‏                updatePrayerUI();
-‏                startPrayerCountdown();
+‎// 1. جلب المواقيت بناءً على موقع المستخ// استبدل دالة fetchPrayers بالكامل بهذا الكود
+function fetchPrayers() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+            const url = `https://api.aladhan.com/v1/timings?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&method=4`;
+            fetch(url).then(res => res.json()).then(data => {
+                const d = data.data;
+                prayerTimesData = d.timings;
+                
+‎                // تحديث جدول المواقيت والعداد
+                updatePrayerUI();
+                startPrayerCountdown();
+                
+‎                // تحديث شريط التاريخ الهجري والميلادي
+                const hijri = d.date.hijri;
+                const greg = d.date.gregorian;
+                
+                document.getElementById('hijri-date').innerText = `${hijri.day} ${hijri.month.ar} ${hijri.year}`;
+                document.getElementById('gregorian-date').innerText = greg.date;
+                document.getElementById('current-day').innerText = hijri.weekday.ar;
             });
+        }, (err) => {
+            document.getElementById('next-prayer-name').innerText = "يرجى تفعيل الموقع للمواقيت";
         });
     }
 }
+}
+}
 
-// 2. تحديث جدول الأوقات
+‎// 2. تحديث جدول الأوقات
 function updatePrayerUI() {
     if(!prayerTimesData) return;
     document.getElementById('fajr-time').innerText = prayerTimesData.Fajr;
@@ -299,7 +313,7 @@ function updatePrayerUI() {
     document.getElementById('isha-time').innerText = prayerTimesData.Isha;
 }
 
-// 3. العداد التنازلي للصلاة القادمة
+‎// 3. العداد التنازلي للصلاة القادمة
 function startPrayerCountdown() {
     setInterval(() => {
         if (!prayerTimesData) return;
@@ -334,7 +348,7 @@ function startPrayerCountdown() {
         document.getElementById('next-prayer-timer').innerText = `${hh}:${mm}:${ss}`;
     }, 1000);
 }
-// --- 7. وظائف القبلة (نظام مطابقة السهمين) ---// --- 7. وظائف القبلة الاحترافية (نظام المطابقة) ---// --- 7. القبلة: نظام مطابقة السهمين (نسخة نهائية) ---
+‎// --- 7. وظائف القبلة (نظام مطابقة السهمين) ---// --- 7. وظائف القبلة الاحترافية (نظام المطابقة) ---// --- 7. القبلة: نظام مطابقة السهمين (نسخة نهائية) ---
 let qiblaAngle = 0;
 
 function getQibla() {
@@ -353,7 +367,7 @@ function getQibla() {
         
         document.getElementById('qibla-deg').innerText = Math.round(qiblaAngle);
         
-        // تثبيت السهم الأخضر (الهدف) باتجاه مكة
+‎        // تثبيت السهم الأخضر (الهدف) باتجاه مكة
         const greenArrow = document.getElementById('qibla-target-arrow');
         if (greenArrow) {
             greenArrow.style.transform = `translate(-50%, -100%) rotate(${qiblaAngle}deg)`;
@@ -361,7 +375,7 @@ function getQibla() {
         
         document.getElementById('qibla-status').innerHTML = `
             <button onclick="activateCompass()" style="background:var(--gold); color:var(--dark-teal); border:none; padding:10px 20px; border-radius:10px; font-weight:bold; cursor:pointer;">
-                تفعيل البوصلة 🧭
+‎                تفعيل البوصلة 🧭
             </button>`;
     }, null, { timeout: 5000 });
 }
@@ -382,10 +396,10 @@ function moveCompass(e) {
     const goldArrow = document.getElementById('compass-pointer');
     const status = document.getElementById('qibla-status');
 
-    // السهم الذهبي يلاحق اتجاه الجوال
+‎    // السهم الذهبي يلاحق اتجاه الجوال
     goldArrow.style.transform = `translate(-50%, -100%) rotate(${-heading}deg)`;
 
-    // حساب التطابق
+‎    // حساب التطابق
     const currentPos = (360 - heading) % 360;
     const diff = Math.abs(currentPos - qiblaAngle);
 
@@ -398,7 +412,7 @@ function moveCompass(e) {
     }
 }
 
-// دالة التبديل (تأكد من وجود نسخة واحدة منها فقط)
+‎// دالة التبديل (تأكد من وجود نسخة واحدة منها فقط)
 function switchMainTab(t) {
     ['quran', 'azkar', 'sebha', 'prayer', 'qibla'].forEach(tab => {
         const sec = document.getElementById(tab + '-section');
@@ -410,14 +424,14 @@ function switchMainTab(t) {
     if (t === 'prayer') fetchPrayers();
 }
 
-// دالة جلب آية عشوائية
+‎// دالة جلب آية عشوائية
 async function generateDailyAyah() {
     const textEl = document.getElementById('daily-ayah-text');
     const infoEl = document.getElementById('daily-ayah-info');
     
     if (!textEl) return;
 
-    // إضافة تأثير اختفاء بسيط عند التحميل
+‎    // إضافة تأثير اختفاء بسيط عند التحميل
     textEl.style.opacity = "0.5";
 
     try {
@@ -434,9 +448,8 @@ async function generateDailyAyah() {
     }
 }
 
-// تشغيل عند التحميل
+‎// تشغيل عند التحميل
 document.addEventListener('DOMContentLoaded', generateDailyAyah);
-// تنفيذ احتياطي فوراً
+‎// تنفيذ احتياطي فوراً
 setTimeout(generateDailyAyah, 500);
 
-الملف هذا تبعي قلي اش اغير ووين
