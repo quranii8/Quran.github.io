@@ -334,41 +334,82 @@ function startPrayerCountdown() {
     }, 1000);
 }
 // --- 7. وظائف القبلة (نسخة السرعة القصوى) ---
+let finalQiblaAngle = 0; // متغير لحفظ زاوية مكة
+
 function getQibla() {
     if (navigator.geolocation) {
-        document.getElementById('qibla-status').innerText = "جاري التحديد السريع...";
-
-        const fastOptions = {
-            enableHighAccuracy: false, // إلغاء الدقة العالية لتسريع الاستجابة ومنع الثقل
-            timeout: 5000,             // انتظار 5 ثوانٍ فقط
-            maximumAge: 60000          // استخدام موقع محفوظ لو وجد
-        };
+        document.getElementById('qibla-status').innerText = "جاري التحديد...";
 
         navigator.geolocation.getCurrentPosition(position => {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
             
-            // حساب الزاوية
+            // حساب زاوية مكة
             const phiK = 21.4225 * Math.PI / 180;
             const lambdaK = 39.8262 * Math.PI / 180;
             const phi = lat * Math.PI / 180;
             const lambda = lng * Math.PI / 180;
-
             let qDeg = Math.atan2(Math.sin(lambdaK - lambda), Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda));
-            const finalDeg = (qDeg * 180 / Math.PI + 360) % 360;
+            finalQiblaAngle = (qDeg * 180 / Math.PI + 360) % 360;
             
-            // تحديث الواجهة
-            const degEl = document.getElementById('qibla-deg');
-            const pointer = document.getElementById('compass-pointer');
-            if(degEl) degEl.innerText = Math.round(finalDeg);
-            if(pointer) pointer.style.transform = `translate(-50%, -100%) rotate(${finalDeg}deg)`;
-            
-            document.getElementById('qibla-status').innerText = "تم التحديد بنجاح ✅";
+            document.getElementById('qibla-deg').innerText = Math.round(finalQiblaAngle);
+            document.getElementById('qibla-status').innerText = "دوّر الجوال لضبط الاتجاه";
+
+            // تشغيل الحساس الحركي
+            startCompassTracking();
         }, (err) => {
-            document.getElementById('qibla-status').innerText = "يرجى تفعيل الموقع للمتابعة";
-        }, fastOptions);
+            document.getElementById('qibla-status').innerText = "يرجى تفعيل الموقع";
+        }, { enableHighAccuracy: false, timeout: 5000 });
     }
 }
+
+function startCompassTracking() {
+    const handler = (e) => {
+        // الحصول على اتجاه الشمال من حساس الجوال
+        let compassHeading = e.webkitCompassHeading || (360 - e.alpha);
+        
+        if (compassHeading !== undefined) {
+            // حساب الزاوية المطلوبة للسهم
+            const arrowRotation = finalQiblaAngle - compassHeading;
+            
+            const pointer = document.getElementById('compass-pointer');
+            const statusText = document.getElementById('qibla-status');
+
+            if (pointer) {
+                pointer.style.transform = `translate(-50%, -100%) rotate(${arrowRotation}deg)`;
+
+                // "الإشارة الاحترافية": إذا كان السهم قريباً من القبلة (بفرق أقل من 5 درجات)
+                const isCorrect = Math.abs(arrowRotation % 360) < 5 || Math.abs(arrowRotation % 360) > 355;
+                
+                if (isCorrect) {
+                    pointer.style.backgroundColor = "#27ae60"; // أخضر عند الاتجاه الصحيح
+                    pointer.style.boxShadow = "0 0 15px #27ae60";
+                    statusText.innerText = "أنت باتجاه القبلة الآن ✅";
+                    statusText.style.color = "#27ae60";
+                    if(window.navigator.vibrate) window.navigator.vibrate(50); // اهتزاز خفيف (اختياري)
+                } else {
+                    pointer.style.backgroundColor = "var(--gold)"; // ذهبي في باقي الحالات
+                    pointer.style.boxShadow = "none";
+                    statusText.innerText = "دوّر الجوال لضبط الاتجاه";
+                    statusText.style.color = "var(--gold)";
+                }
+            }
+        }
+    };
+
+    // طلب الإذن في آيفون (iOS) لأن له شروط خاصة
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission().then(state => {
+            if (state === 'granted') {
+                window.addEventListener("deviceorientation", handler, true);
+            }
+        });
+    } else {
+        window.addEventListener("deviceorientationabsolute", handler, true);
+        window.addEventListener("deviceorientation", handler, true);
+    }
+}
+
 
 // دالة التبديل الشاملة (النسخة الوحيدة التي تحتاجها)
 function switchMainTab(t) {
