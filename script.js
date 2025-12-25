@@ -384,32 +384,33 @@ function askCompassPermission() {
     }
 }
 function handleCompass(e) {
-    // الحصول على اتجاه الجهاز الحقيقي (Heading)
     let heading = e.webkitCompassHeading || (360 - e.alpha);
     if (heading === undefined) return;
 
     const pointer = document.getElementById('compass-pointer');
     const statusText = document.getElementById('qibla-status');
 
-    // السهم الذهبي الآن يمثل اتجاه الجهاز الحالي
-    // نقوم بتدويره عكس اتجاه الشمال ليظل ثابتاً في يده
+    // تحريك السهم الذهبي ليمثل اتجاه "شمال" الجهاز
+    // وبما أن الجهاز يدور، فنحن ندور السهم عكسه ليبقى ثابتاً بالنسبة للمكان
     pointer.style.transform = `translate(-50%, -100%) rotate(${-heading}deg)`;
 
-    // حساب الفرق بين زاوية الجهاز وزاوية مكة
-    // القبلة تكون صحيحة عندما ينطبق السهم الذهبي (اتجاهك) فوق السهم الأخضر (مكة)
-    const diff = Math.abs(((-heading + 360) % 360) - (finalQiblaAngle % 360));
+    // حساب المطابقة: متى يركب السهم الذهبي فوق الأخضر؟
+    // الأخضر عند زاوية finalQiblaAngle، والذهبي عند زاوية -heading
+    // المطابقة هي الفرق بين (360 - heading) والزاوية المستهدفة
+    const currentHeading = (360 - heading) % 360;
+    const diff = Math.abs(currentHeading - finalQiblaAngle);
 
-    // إذا كان الفرق أقل من 7 درجات (تطابق)
     if (diff < 7 || diff > 353) {
-        pointer.style.backgroundColor = "#27ae60"; 
-        pointer.style.boxShadow = "0 0 20px rgba(39, 174, 96, 0.5)";
-        statusText.innerHTML = "<span style='color:#27ae60; font-weight:bold;'>أنت باتجاه القبلة الآن ✅</span>";
+        pointer.style.backgroundColor = "#28a745"; // أخضر نجاح
+        pointer.style.boxShadow = "0 0 20px #28a745";
+        statusText.innerHTML = "<span style='color:#28a745; font-weight:bold;'>أنت باتجاه القبلة الآن ✅</span>";
     } else {
         pointer.style.backgroundColor = "var(--gold)";
         pointer.style.boxShadow = "none";
-        statusText.innerHTML = "<span style='color:var(--gold);'>دوّر الجوال حتى ينطبق السهمين</span>";
+        statusText.innerHTML = "طابق السهم الذهبي فوق الأخضر";
     }
 }
+
 
 
 // دالة التبديل الشاملة بين الأقسام
