@@ -347,35 +347,72 @@ function switchMainTab(t) {
     });
 }
 
-// تشغيل جلب المواقيت عند فتح التطبيق
-fetchPrayers();
+let qiblaAngle = 0;
+
+// 1. دالة جلب الموقع وحساب زاوية القبلة الثابتة
 function getQibla() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
             
-            // معادلة حساب اتجاه القبلة
+            // الحسابات الرياضية لموقع الكعبة المشرفة
             const phiK = 21.4225 * Math.PI / 180;
             const lambdaK = 39.8262 * Math.PI / 180;
             const phi = lat * Math.PI / 180;
             const lambda = lng * Math.PI / 180;
 
-            let qiblaDeg = Math.atan2(Math.sin(lambdaK - lambda), Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda));
-            qiblaDeg = qiblaDeg * 180 / Math.PI;
+            let qDeg = Math.atan2(Math.sin(lambdaK - lambda), Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda));
+            qiblaAngle = (qDeg * 180 / Math.PI + 360) % 360;
             
-            const finalDeg = (qiblaDeg + 360) % 360;
-            
-            document.getElementById('qibla-deg').innerText = Math.round(finalDeg);
-            document.getElementById('compass-pointer').style.transform = `translate(-50%, -100%) rotate(${finalDeg}deg)`;
-            document.getElementById('qibla-status').innerText = "تم تحديد الاتجاه بنجاح";
+            document.getElementById('qibla-deg').innerText = Math.round(qiblaAngle);
+            startCompass(); // تشغيل الحساسات فور الحصول على الموقع
         }, () => {
-            document.getElementById('qibla-status').innerText = "يرجى تفعيل خدمة الموقع";
+            document.getElementById('qibla-status').innerText = "يرجى تفعيل الموقع لمعرفة القبلة";
         });
     }
 }
 
-// تحديث دالة التبديل لتشمل القبلة
+// 2. دالة تشغيل البوصلة التفاعلية (الحركة الحية)
+function startCompass() {
+    const handler = (e) => {
+        // الحصول على اتجاه الشمال من الجوال (يدعم آيفون وأندرويد)
+        let compass = e.webkitCompassHeading || (360 - e.alpha);
+        if (compass === undefined) return;
+
+        // حساب الزاوية النسبية: (زاوية القبلة - اتجاه الجوال الحالي)
+        const rotateDeg = qiblaAngle - compass;
+        
+        const pointer = document.getElementById('compass-pointer');
+        const statusText = document.getElementById('qibla-status');
+
+        if (pointer) {
+            pointer.style.transform = `translate(-50%, -100%) rotate(${rotateDeg}deg)`;
+
+            // "ميزة الفخامة": إذا كان الفرق أقل من 5 درجات، يضيء السهم بالأخضر
+            const isPointed = Math.abs(rotateDeg % 360) < 5 || Math.abs(rotateDeg % 360) > 355;
+            
+            if (isPointed) {
+                pointer.style.backgroundColor = "#27ae60"; // أخضر
+                statusText.innerText = "أنت باتجاه القبلة الآن ✅";
+                statusText.style.color = "#27ae60";
+            } else {
+                pointer.style.backgroundColor = "var(--gold)"; // ذهبي
+                statusText.innerText = "دور بالجهاز لضبط السهم";
+                statusText.style.color = "var(--gold)";
+            }
+        }
+    };
+
+    // تفعيل الحساسات في المتصفح
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener("deviceorientationabsolute", handler, true);
+        window.addEventListener("deviceorientation", handler, true);
+    }
+}
+
+// 3. تحديث دالة التنقل للتأكد من تشغيل القبلة عند الضغط على زرها
+// (تأكد أن هذه الدالة تستبدل الدالة القديمة switchMainTab)
 function switchMainTab(t) {
     document.querySelectorAll('.main-nav button').forEach(b => b.classList.remove('active'));
     document.getElementById(t + 'Tab')?.classList.add('active');
@@ -386,7 +423,8 @@ function switchMainTab(t) {
         if (el) el.style.display = s.startsWith(t) ? 'block' : 'none';
     });
     
-    if(t === 'qibla') getQibla(); // تشغيل الحساب عند فتح القسم
+    // تشغيل حساب القبلة فور فتح القسم
+    if(t === 'qibla') {
+        getQibla();
+    }
 }
-
-
