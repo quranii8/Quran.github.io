@@ -340,11 +340,10 @@ function getQibla() {
     if (navigator.geolocation) {
         document.getElementById('qibla-status').innerText = "جاري تحديد موقعك...";
 
-        navigator.geolocation.getCurrentPosition(position => {
+            navigator.geolocation.getCurrentPosition(position => {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
             
-            // حساب زاوية مكة المكرمة
             const phiK = 21.4225 * Math.PI / 180;
             const lambdaK = 39.8262 * Math.PI / 180;
             const phi = lat * Math.PI / 180;
@@ -353,23 +352,21 @@ function getQibla() {
             finalQiblaAngle = (qDeg * 180 / Math.PI + 360) % 360;
             
             document.getElementById('qibla-deg').innerText = Math.round(finalQiblaAngle);
-
-            // 1. تثبيت السهم الأخضر (الهدف) على زاوية القبلة فوراً
-           // ابحث عن هذا السطر داخل getQibla واستبدله
-const targetArrow = document.getElementById('qibla-target-arrow');
-if (targetArrow) {
-    targetArrow.style.transform = `translate(-50%, -100%) rotate(${finalQiblaAngle}deg)`;
-}
-
-            // 2. إظهار زر التفعيل لمستخدمي الآيفون
+            
+            // --- السطر السحري هنا لتصحيح اتجاه السهم الأخضر ---
+            const targetArrow = document.getElementById('qibla-target-arrow');
+            if (targetArrow) {
+                // نثبت السهم الأخضر تماماً على زاوية مكة المحسوبة
+                targetArrow.style.transform = `translate(-50%, -100%) rotate(${finalQiblaAngle}deg)`;
+            }
+            
             document.getElementById('qibla-status').innerHTML = `
-                <button onclick="askCompassPermission()" style="background:var(--gold); color:var(--dark-teal); border:none; padding:8px 15px; border-radius:10px; font-weight:bold; cursor:pointer; font-family:inherit;">
-                    تفعيل حركة البوصلة 🧭
+                <button id="enable-compass-btn" onclick="askCompassPermission()" style="background:var(--gold); color:var(--dark-teal); border:none; padding:8px 15px; border-radius:10px; font-weight:bold; cursor:pointer;">
+                    تشغيل البوصلة الحية 🧭
                 </button>`;
         }, (err) => {
             document.getElementById('qibla-status').innerText = "يرجى تفعيل الموقع";
-        }, { enableHighAccuracy: false, timeout: 5000 });
-    }
+        });
 }
 
 // دالة طلب الإذن للحساسات (ضرورية لـ iOS)
