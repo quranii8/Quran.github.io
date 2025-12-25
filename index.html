@@ -20,6 +20,11 @@
     </div>
 
     <div class="menu-item">
+        <span>أصوات التنبيه</span>
+        <button id="muteBtn" class="menu-tool-btn" onclick="toggleMute()">🔊</button>
+    </div>
+
+    <div class="menu-item">
         <span>حجم الخط</span>
         <div class="font-controls">
             <button class="menu-tool-btn" onclick="changeFontSize(2)">A+</button>
@@ -101,17 +106,32 @@
     </div>
 
     <div id="sebha-section" style="display:none;">
-        <div class="timer-wrapper">
+        <div class="goal-setting">
+            <span>الهدف اليومي:</span>
+            <input type="number" id="sebhaGoal" value="100" min="1" onchange="updateGoal()">
+        </div>
+        
+        <div class="progress-container">
+            <div id="sebhaBar" class="progress-bar"></div>
+        </div>
+
+        <div class="sebha-circle" onclick="incrementSebha()">
+            <span id="sebhaCounter">0</span>
+            <small id="sebhaStatus">اضغط للتسبيح</small>
+        </div>
+
+        <div class="sebha-controls">
+            <button class="modern-reset-btn" onclick="resetSebha()">🔄 تصفير العداد</button>
+        </div>
+
+        <div class="timer-wrapper" style="margin-top: 20px;">
             <span class="timer-label">التصفير التلقائي:</span>
             <div id="countdown-timer" class="modern-timer">00:00:00</div>
         </div>
-        <div class="sebha-circle" onclick="incrementSebha()">
-            <span id="sebhaCounter">0</span>
-            <small>اضغط للتسبيح</small>
-        </div>
-        <button class="modern-reset-btn" onclick="resetSebha()">🔄 تصفير يدوي</button>
     </div>
 </div>
+
+<audio id="notificationSound" src="https://www.soundjay.com/buttons/sounds/button-37a.mp3"></audio>
 
 <script src="script.js"></script>
 </body>
