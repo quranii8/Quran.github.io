@@ -40,7 +40,7 @@
     </div>
 
     <p style="font-size:12px;text-align:center;margin-top:50px;opacity:0.6;">
-        إصدار حقيبة المؤمن 2025
+‎        إصدار حقيبة المؤمن 2025
     </p>
 </div>
 
@@ -60,20 +60,18 @@
 
 <div class="container">
 
-<!-- ================= القرآن ================= -->
+‎<!-- ================= القرآن ================= -->
 <div id="quran-section">
-    <div id="main-view">
-        <div id="main-view">
+ <div id="main-view">
     
     <div id="daily-ayah-card" class="daily-card">
-    <div class="card-header">
-        <span>آية اليوم</span>
-        <button onclick="generateDailyAyah()" class="refresh-btn" title="تغيير الآية">🔄</button>
+        <div class="card-header">
+            <span>✨ آية اليوم</span>
+            <button onclick="generateDailyAyah()" class="refresh-btn">🔄</button>
+        </div>
+        <div id="daily-ayah-text" class="ayah-content">جاري جلب آية كريمة...</div>
+        <div id="daily-ayah-info" class="ayah-info"></div>
     </div>
-    <div id="daily-ayah-text" class="ayah-content">جاري جلب آية كريمة...</div>
-    <div id="daily-ayah-info" class="ayah-info"></div>
-</div>
-
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="ابحث عن سورة..." onkeyup="filterSurahs()">
     </div>
@@ -122,7 +120,7 @@
     </div>
 </div>
 
-<!-- ================= الأذكار ================= -->
+‎<!-- ================= الأذكار ================= -->
 <div id="azkar-section" style="display:none;">
     <div class="azkar-categories" id="azkarCats">
         <div class="category-card" onclick="loadAzkar('morning')">☀️ أذكار الصباح</div>
@@ -143,10 +141,10 @@
     </div>
 </div>
 
-<!-- ================= السبحة ================= -->
+‎<!-- ================= السبحة ================= -->
 <div id="sebha-section" style="display:none;">
     <div class="goal-setting">
-        الهدف اليومي:
+‎        الهدف اليومي:
         <input type="number" id="sebhaGoal" value="100" min="1" onchange="updateGoal()">
     </div>
 
@@ -180,14 +178,12 @@
         <div class="p-card"><span>العشاء</span><b id="isha-time">--:--</b></div>
     </div>
 </div>
-
-
 <div id="qibla-section" style="display:none; text-align:center;">
     <div class="qibla-container">
         <h3>اتجاه القبلة</h3>
         
         <button id="enable-compass-btn" onclick="askCompassPermission()" style="background:var(--gold); color:var(--dark-teal); border:none; padding:10px 20px; border-radius:12px; font-weight:bold; margin-bottom:15px; cursor:pointer; font-family:'Amiri', serif;">
-            تشغيل البوصلة الحية 🧭
+‎            تشغيل البوصلة الحية 🧭
         </button>
 
      <div class="compass">
@@ -207,4 +203,4 @@
 <audio id="notificationSound" src="https://www.soundjay.com/buttons/sounds/button-37a.mp3"></audio>
 <script src="script.js"></script>
 </body>
-</html>
+</html> 
