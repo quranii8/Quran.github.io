@@ -275,20 +275,21 @@ updateCountdown();
 let prayerTimesData = null;
 
 ‎// 1. جلب المواقيت بناءً على موقع المستخ// استبدل دالة fetchPrayers بالكامل بهذا الكود
-
 function fetchPrayers() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
             const url = `https://api.aladhan.com/v1/timings?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&method=4`;
-            fetch(url).then(res => res.json()).then(data => {
-                prayerTimesData = data.data.timings;
-                updatePrayerUI();
-                startPrayerCountdown();
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    prayerTimesData = data.data.timings;
+                    updatePrayerUI(); // لتحديث أوقات (فجر، ظهر...) في الجدول
+                    startPrayerCountdown(); // لبدء عداد "الصلاة القادمة"
+                });
         });
     }
 }
-}
-}
+
 
 ‎// 2. تحديث جدول الأوقات
 function updatePrayerUI() {
