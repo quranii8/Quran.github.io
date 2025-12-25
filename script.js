@@ -300,3 +300,85 @@ function getPrayerTimes() {
 
 // استدعاء الوظيفة لتعمل فور تحميل الصفحة
 getPrayerTimes();
+// --- نظام العد التنازلي للصلاة القادمة ---
+let prayerTimesData = null;
+
+function getPrayerTimes() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            // طريقة الحساب 4 (مكة المكرمة/رابطة العالم الإسلامي)
+            const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=4`;
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    prayerTimesData = data.data.timings;
+                    updatePrayerUI();
+                    startNextPrayerTimer(); 
+                })
+                .catch(err => console.log("خطأ في الاتصال بالخدمة"));
+        });
+    }
+}
+
+function updatePrayerUI() {
+    if(!prayerTimesData) return;
+    document.getElementById('fajr-time').innerText = prayerTimesData.Fajr;
+    document.getElementById('dhuhr-time').innerText = prayerTimesData.Dhuhr;
+    document.getElementById('asr-time').innerText = prayerTimesData.Asr;
+    document.getElementById('maghrib-time').innerText = prayerTimesData.Maghrib;
+    document.getElementById('isha-time').innerText = prayerTimesData.Isha;
+}
+
+function startNextPrayerTimer() {
+    setInterval(() => {
+        if (!prayerTimesData) return;
+
+        const now = new Date();
+        const prayers = [
+            { name: "الفجر", time: prayerTimesData.Fajr },
+            { name: "الظهر", time: prayerTimesData.Dhuhr },
+            { name: "العصر", time: prayerTimesData.Asr },
+            { name: "المغرب", time: prayerTimesData.Maghrib },
+            { name: "العشاء", time: prayerTimesData.Isha }
+        ];
+
+        let next = null;
+        for (let p of prayers) {
+            const [h, m] = p.time.split(':');
+            const pDate = new Date();
+            pDate.setHours(parseInt(h), parseInt(m), 0);
+
+            if (pDate > now) {
+                next = { name: p.name, time: pDate };
+                break;
+            }
+        }
+
+        // إذا انتهت صلوات اليوم، الصلاة القادمة فجر الغد
+        if (!next) {
+            const [h, m] = prayers[0].time.split(':');
+            const pDate = new Date();
+            pDate.setDate(pDate.getDate() + 1);
+            pDate.setHours(parseInt(h), parseInt(m), 0);
+            next = { name: "الفجر", time: pDate };
+        }
+
+        const diff = next.time - now;
+        const hh = Math.floor(diff / 3600000);
+        const mm = Math.floor((diff % 3600000) / 60000);
+        const ss = Math.floor((diff % 60000) / 1000);
+
+        const nameEl = document.getElementById('next-prayer-name');
+        const timerEl = document.getElementById('next-prayer-timer');
+        
+        if(nameEl) nameEl.innerText = `الصلاة القادمة: ${next.name}`;
+        if(timerEl) timerEl.innerText = `${hh.toString().padStart(2,'0')}:${mm.toString().padStart(2,'0')}:${ss.toString().padStart(2,'0')}`;
+    }, 1000);
+}
+
+// تشغيل النظام
+getPrayerTimes();
+
