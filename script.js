@@ -274,18 +274,33 @@ updateProgress();
 updateCountdown();
 let prayerTimesData = null;
 
-// 1. جلب المواقيت بناءً على موقع المستخدم
+// 1. جلب المواقيت بناءً على موقع المستخ// استبدل دالة fetchPrayers بالكامل بهذا الكود
 function fetchPrayers() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
             const url = `https://api.aladhan.com/v1/timings?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&method=4`;
             fetch(url).then(res => res.json()).then(data => {
-                prayerTimesData = data.data.timings;
+                const d = data.data;
+                prayerTimesData = d.timings;
+                
+                // تحديث جدول المواقيت والعداد
                 updatePrayerUI();
                 startPrayerCountdown();
+                
+                // تحديث شريط التاريخ الهجري والميلادي
+                const hijri = d.date.hijri;
+                const greg = d.date.gregorian;
+                
+                document.getElementById('hijri-date').innerText = `${hijri.day} ${hijri.month.ar} ${hijri.year}`;
+                document.getElementById('gregorian-date').innerText = greg.date;
+                document.getElementById('current-day').innerText = hijri.weekday.ar;
             });
+        }, (err) => {
+            document.getElementById('next-prayer-name').innerText = "يرجى تفعيل الموقع للمواقيت";
         });
     }
+}
+}
 }
 
 // 2. تحديث جدول الأوقات
