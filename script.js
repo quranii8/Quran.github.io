@@ -333,56 +333,57 @@ function startPrayerCountdown() {
         document.getElementById('next-prayer-timer').innerText = `${hh}:${mm}:${ss}`;
     }, 1000);
 }
-
-// 4. تحديث وظيفة التنقل (Tabs) لتشمل القسم الجديد
-// ابحث عن دالة switchMainTab القديمة واستبدلها بهذا:
-function switchMainTab(t) {
-    document.querySelectorAll('.main-nav button').forEach(b => b.classList.remove('active'));
-    document.getElementById(t + 'Tab')?.classList.add('active');
-
-    const sections = ['quran-section', 'azkar-section', 'sebha-section', 'prayer-section'];
-    sections.forEach(s => {
-        const el = document.getElementById(s);
-        if (el) el.style.display = s.startsWith(t) ? 'block' : 'none';
-    });
-}
+// --- 7. وظائف القبلة (نسخة السرعة القصوى) ---
 function getQibla() {
     if (navigator.geolocation) {
+        document.getElementById('qibla-status').innerText = "جاري التحديد السريع...";
+
+        const fastOptions = {
+            enableHighAccuracy: false, // إلغاء الدقة العالية لتسريع الاستجابة ومنع الثقل
+            timeout: 5000,             // انتظار 5 ثوانٍ فقط
+            maximumAge: 60000          // استخدام موقع محفوظ لو وجد
+        };
+
         navigator.geolocation.getCurrentPosition(position => {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
             
-            // معادلة حساب اتجاه القبلة
+            // حساب الزاوية
             const phiK = 21.4225 * Math.PI / 180;
             const lambdaK = 39.8262 * Math.PI / 180;
             const phi = lat * Math.PI / 180;
             const lambda = lng * Math.PI / 180;
 
-            let qiblaDeg = Math.atan2(Math.sin(lambdaK - lambda), Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda));
-            qiblaDeg = qiblaDeg * 180 / Math.PI;
+            let qDeg = Math.atan2(Math.sin(lambdaK - lambda), Math.cos(phi) * Math.tan(phiK) - Math.sin(phi) * Math.cos(lambdaK - lambda));
+            const finalDeg = (qDeg * 180 / Math.PI + 360) % 360;
             
-            const finalDeg = (qiblaDeg + 360) % 360;
+            // تحديث الواجهة
+            const degEl = document.getElementById('qibla-deg');
+            const pointer = document.getElementById('compass-pointer');
+            if(degEl) degEl.innerText = Math.round(finalDeg);
+            if(pointer) pointer.style.transform = `translate(-50%, -100%) rotate(${finalDeg}deg)`;
             
-            document.getElementById('qibla-deg').innerText = Math.round(finalDeg);
-            document.getElementById('compass-pointer').style.transform = `translate(-50%, -100%) rotate(${finalDeg}deg)`;
-            document.getElementById('qibla-status').innerText = "تم تحديد الاتجاه بنجاح";
-        }, () => {
-            document.getElementById('qibla-status').innerText = "يرجى تفعيل خدمة الموقع";
-        });
+            document.getElementById('qibla-status').innerText = "تم التحديد بنجاح ✅";
+        }, (err) => {
+            document.getElementById('qibla-status').innerText = "يرجى تفعيل الموقع للمتابعة";
+        }, fastOptions);
     }
 }
 
-// تحديث دالة التبديل لتشمل القبلة
+// دالة التبديل الشاملة (النسخة الوحيدة التي تحتاجها)
 function switchMainTab(t) {
+    // تحديث أزرار التنقل
     document.querySelectorAll('.main-nav button').forEach(b => b.classList.remove('active'));
     document.getElementById(t + 'Tab')?.classList.add('active');
 
-    const sections = ['quran-section', 'azkar-section', 'sebha-section', 'prayer-section', 'qibla-section'];
-    sections.forEach(s => {
+    // إظهار القسم وإخفاء البقية
+    const allSections = ['quran-section', 'azkar-section', 'sebha-section', 'prayer-section', 'qibla-section'];
+    allSections.forEach(s => {
         const el = document.getElementById(s);
         if (el) el.style.display = s.startsWith(t) ? 'block' : 'none';
     });
     
-    if(t === 'qibla') getQibla(); // تشغيل الحساب عند فتح القسم
+    // تشغيل الوظائف تلقائياً عند فتح القسم
+    if(t === 'qibla') getQibla();
+    if(t === 'prayer') fetchPrayers();
 }
-
