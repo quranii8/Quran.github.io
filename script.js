@@ -229,6 +229,9 @@ renderAchievements();
     if (sCount === sGoal) {
         document.querySelector('.sebha-circle').classList.add('goal-reached');
         playNotify(); 
+        let total = parseInt(localStorage.getItem('totalKhatma') || 0);
+localStorage.setItem('totalKhatma', total + 1);
+renderAchievements();
     }
 }
 
