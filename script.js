@@ -44,6 +44,10 @@ fetch('https://api.alquran.cloud/v1/surah').then(res => res.json()).then(data =>
 function displaySurahs(surahs) { 
     const list = document.getElementById('surahList');
     list.innerHTML = surahs.map(s => `<div class="surah-card" onclick="openSurah(${s.number}, '${s.name}')">${s.number}. ${s.name}</div>`).join(''); 
+// زيادة مجموع الآيات
+let total = parseInt(localStorage.getItem('totalAyat') || 0);
+localStorage.setItem('totalAyat', total + data.data.ayahs.length);
+renderAchievements();
 }
 
 function filterSurahs() { 
