@@ -5,6 +5,22 @@ const playBtn = document.getElementById('playBtn');
 const seekSlider = document.getElementById('seekSlider');
 const notifySound = document.getElementById('notificationSound');
 
+function initAchievements() {
+    if (!localStorage.getItem('firstVisit')) {
+        localStorage.setItem('firstVisit', new Date().toLocaleDateString());
+        localStorage.setItem('totalSebha', 0);
+        localStorage.setItem('totalAzkar', 0);
+        localStorage.setItem('totalAyat', 0);
+        localStorage.setItem('totalKhatma', 0);
+    }
+}
+function renderAchievements() {
+    document.getElementById('firstVisit').innerText = localStorage.getItem('firstVisit');
+    document.getElementById('totalSebha').innerText = localStorage.getItem('totalSebha');
+    document.getElementById('totalAzkar').innerText = localStorage.getItem('totalAzkar');
+    document.getElementById('totalAyat').innerText = localStorage.getItem('totalAyat');
+    document.getElementById('totalKhatma').innerText = localStorage.getItem('totalKhatma');
+}
 // --- 1. القائمة الجانبية والإعدادات ---
 function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
 function toggleMute() { 
@@ -196,6 +212,9 @@ function updateGoal() {
 
 function incrementSebha() {
     sCount++;
+    let total = parseInt(localStorage.getItem('totalSebha') || 0);
+localStorage.setItem('totalSebha', total + 1);
+renderAchievements();
     document.getElementById('sebhaCounter').innerText = sCount;
     localStorage.setItem('sebhaCount', sCount);
     updateProgress();
@@ -437,3 +456,6 @@ async function generateDailyAyah() {
 document.addEventListener('DOMContentLoaded', generateDailyAyah);
 // تنفيذ احتياطي فوراً
 setTimeout(generateDailyAyah, 500);
+
+initAchievements();
+renderAchievements();
