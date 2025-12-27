@@ -184,6 +184,9 @@ function countZekr(id) {
         if (c === 0) {
             el.closest('.zekr-card').classList.add('completed');
             playNotify(); 
+            let total = parseInt(localStorage.getItem('totalAzkar') || 0);
+localStorage.setItem('totalAzkar', total + 1);
+renderAchievements();
         }
     }
 }
