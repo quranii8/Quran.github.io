@@ -1955,12 +1955,15 @@ function closeTafsirModal() {
 }
 
 // تحميل التفسير من API
+// تحميل التفسير من API محسّن
 async function loadTafsir() {
     if (!currentTafsirAyah) return;
     
-    const tafsirType = document.getElementById('tafsir-selector').value;
+    const tafsirSelect = document.getElementById('tafsir-selector');
+    const tafsirType = tafsirSelect.value;
     const contentDiv = document.getElementById('tafsir-content');
     
+    // Loader
     contentDiv.innerHTML = `
         <div style="text-align: center; padding: 40px;">
             <div class="spinner" style="margin: 0 auto;"></div>
@@ -1969,37 +1972,74 @@ async function loadTafsir() {
     `;
     
     try {
+        // حساب رقم الآية العالمي (من 1 إلى 6236)
+        let globalAyahNumber = 0;
+        
+        // جمع آيات السور السابقة
+        for (let i = 1; i < currentTafsirAyah.surah; i++) {
+            const surah = allSurahs.find(s => s.number === i);
+            if (surah) {
+                globalAyahNumber += surah.numberOfAyahs;
+            }
+        }
+        
+        // إضافة رقم الآية في السورة الحالية
+        globalAyahNumber += currentTafsirAyah.ayah;
+        
+        console.log(`🔍 السورة: ${currentTafsirAyah.surah}, الآية: ${currentTafsirAyah.ayah}, الرقم العالمي: ${globalAyahNumber}`);
+        
+        // استخدام API أفضل
         const response = await fetch(
-            `https://api.alquran.cloud/v1/ayah/${currentTafsirAyah.surah}:${currentTafsirAyah.ayah}/${tafsirType}`
+            `https://api.alquran.cloud/v1/ayah/${globalAyahNumber}/${tafsirType}`
         );
         
         const data = await response.json();
         
-        if (data.code === 200 && data.data.text) {
+        console.log('📥 البيانات:', data);
+        
+        if (data.code === 200 && data.data && data.data.text) {
             let tafsirText = data.data.text;
+            
+            // تنظيف وتنسيق النص
+            tafsirText = tafsirText.replace(/\n\n/g, '</p><p style="margin: 15px 0;">');
             tafsirText = tafsirText.replace(/\n/g, '<br>');
             
+            // إزالة الأرقام والرموز الغريبة
+            tafsirText = tafsirText.replace(/\[\d+\]/g, '');
+            
             contentDiv.innerHTML = `
-                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border-right: 4px solid var(--gold);">
-                    <p style="margin: 0; text-align: justify; direction: rtl;">${tafsirText}</p>
+                <div style="background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; border-right: 5px solid var(--gold);">
+                    <div style="background: rgba(201,176,122,0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                        <p style="margin: 0; font-size: 0.9rem; color: var(--gold); font-weight: bold;">
+                            📚 ${tafsirSelect.options[tafsirSelect.selectedIndex].text}
+                        </p>
+                    </div>
+                    <p style="margin: 15px 0; text-align: justify; direction: rtl; line-height: 2.2;">${tafsirText}</p>
                 </div>
             `;
             
             if (typeof playNotify === 'function') playNotify();
+            
         } else {
             throw new Error('لم يتم العثور على التفسير');
         }
         
     } catch (error) {
+        console.error('❌ خطأ:', error);
+        
         contentDiv.innerHTML = `
-            <div style="text-align: center; padding: 40px; color: #ff6b6b;">
+            <div style="text-align: center; padding: 40px;">
                 <div style="font-size: 3rem; margin-bottom: 15px;">⚠️</div>
-                <p style="font-size: 1.1rem;">عذراً، حدث خطأ في تحميل التفسير</p>
-                <p style="font-size: 0.9rem; opacity: 0.8;">يرجى المحاولة مرة أخرى</p>
+                <p style="color: #ff6b6b; font-size: 1.1rem; margin-bottom: 10px;">عذراً، حدث خطأ في تحميل التفسير</p>
+                <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">يرجى اختيار تفسير آخر أو المحاولة مرة أخرى</p>
+                <button onclick="loadTafsir()" style="margin-top: 20px; background: var(--gold); color: var(--dark-teal); border: none; padding: 10px 25px; border-radius: 20px; cursor: pointer; font-weight: bold; font-family: 'Amiri', serif;">
+                    🔄 إعادة المحاولة
+                </button>
             </div>
         `;
     }
 }
+
 
 // إضافة خاصية الضغط على الآيات
 function makeAyahsClickable() {
