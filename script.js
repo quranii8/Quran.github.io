@@ -1792,3 +1792,65 @@ function showPageTransition(arrow) {
     // إزالة بعد ثانية
     setTimeout(() => indicator.remove(), 800);
 }
+// ================= دالة مشاركة السورة =================
+async function shareSurah() {
+    if (!currentSurahId) {
+        alert('⚠️ اختر سورة أولاً');
+        return;
+    }
+
+    // جلب معلومات السورة الحالية
+    const surah = allSurahs.find(s => s.number === currentSurahId);
+    if (!surah) return;
+
+    // بناء الرابط المباشر
+    const shareUrl = `${window.location.origin}${window.location.pathname}?surah=${currentSurahId}`;
+    
+    // النص المشاركة الفخم
+    const shareText = `📖 ${surah.name}\n${surah.englishName} | ${surah.numberOfAyahs} آية\n\n"${surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}"\n\nاستمع واقرأ معي 🎧`;
+
+    // التحقق من دعم المتصفح لـ Web Share API
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: `سورة ${surah.name}`,
+                text: shareText,
+                url: shareUrl
+            });
+            playNotify();
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                console.log('مشاركة ملغية');
+            }
+        }
+    } else {
+        // النسخ التلقائي للحافظة
+        const fullText = `${shareText}\n\n${shareUrl}`;
+        navigator.clipboard.writeText(fullText).then(() => {
+            alert('✅ تم نسخ رابط السورة!\n\nالصق الرابط في أي مكان للمشاركة 📋');
+            playNotify();
+        }).catch(() => {
+            // عرض الرابط في نافذة منبثقة
+            prompt('📋 انسخ الرابط:', shareUrl);
+        });
+    }
+}
+
+// ================= فتح السورة من الرابط تلقائياً =================
+window.addEventListener('DOMContentLoaded', function() {
+    // قراءة رقم السورة من URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const surahFromUrl = urlParams.get('surah');
+    
+    if (surahFromUrl && allSurahs.length > 0) {
+        const surahNum = parseInt(surahFromUrl);
+        const surah = allSurahs.find(s => s.number === surahNum);
+        
+        if (surah) {
+            // فتح السورة تلقائياً
+            setTimeout(() => {
+                openSurah(surahNum, surah.name);
+            }, 500);
+        }
+    }
+});
