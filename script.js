@@ -225,37 +225,37 @@ function openSurah(id, name) {
             
             // عرض الآيات
      // عرض الآيات
+// عرض الآيات
 ayahs.forEach((ayah, index) => {
     let text = ayah.text;
     
-    // حذف البسملة من أول آية (ما عدا سورة الفاتحة)
+    // ✅ حذف البسملة من الآية الأولى (ما عدا الفاتحة)
     if (index === 0 && id !== 1) {
-        // طريقة 1: حذف أي شي يبدأ بـ "بسم" أو "بِسم"
-        text = text.replace(/^[\s\u064B-\u0652]*بِ?سۡ?ْ?مِ[\s\S]*?ٱلرَّحِی?يمِ[\s\u064B-\u0652]*۝?/i, '');
+        // حذف البسملة بكل أشكالها
+        text = text.replace('بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ', '');
+        text = text.replace('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', '');
+        text = text.replace('بسم الله الرحمن الرحيم', '');
         
-        // طريقة 2: حذف كل البسملات الممكنة
-        text = text.replace(/بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ/g, '');
-        text = text.replace(/بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ/g, '');
-        text = text.replace(/بسم الله الرحمن الرحيم/g, '');
+        // حذف أي بسملة بتشكيلات مختلفة
+        text = text.replace(/بِ?سۡ?ْ?مِ\s*ٱ?للَّ?هِ\s*ٱ?لرَّ?حۡ?ْ?مَـٰ?نِ\s*ٱ?لرَّ?حِی?يمِ/gi, '');
         
-        // طريقة 3: حذف أي كلمة تحتوي على "بسم"
-        const words = text.split(' ');
-        text = words.filter(word => !word.includes('بِسۡمِ') && !word.includes('بِسْمِ') && !word.includes('بسم')).join(' ');
+        // حذف الرموز الزائدة
+        text = text.replace(/۝/g, '');
+        text = text.replace(/\u06DD/g, ''); // رمز نهاية الآية
+        
+        // تنظيف المسافات الزائدة في البداية
+        text = text.trimStart();
+        text = text.replace(/^\s+/, '');
     }
     
-    // تنظيف المسافات الزائدة
     text = text.trim();
-    text = text.replace(/\s+/g, ' ');
-    text = text.replace(/۝/g, ''); // حذف رمز نهاية الآية
+    
+    // عرض الآية فقط إذا فيها محتوى
+    if (text.length > 0) {
+        ayahsHTML += `<span class="ayah-item" data-index="${index}">${text}</span> <span style="color:var(--gold); font-size: 1.1rem;">﴿${ayah.numberInSurah}﴾</span> `;
+    }
+});
 
-
-                
-                text = text.trim();
-                
-                if (text.length > 0) {
-                    ayahsHTML += `<span class="ayah-item" data-index="${index}">${text}</span> <span style="color:var(--gold); font-size: 1.1rem;">﴿${ayah.numberInSurah}﴾</span> `;
-                }
-            });
             
             document.getElementById('ayahsContainer').innerHTML = ayahsHTML;
             setupAyahHighlighting(ayahs.length);
