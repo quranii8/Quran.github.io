@@ -1929,7 +1929,7 @@ setTimeout(function() {
         }
     }
 }, 1500);
-// ================= نظام التفسير التفاعلي =================
+// ================= نظام التفسير التفاعلي =================// ================= نظام التفسير التفاعلي =================
 
 let currentTafsirAyah = null;
 
@@ -1937,17 +1937,14 @@ let currentTafsirAyah = null;
 function openTafsirModal(ayahNumber, ayahText, surahNumber) {
     currentTafsirAyah = { ayah: ayahNumber, surah: surahNumber };
     
-    // عرض النافذة
     const modal = document.getElementById('tafsir-modal');
     modal.style.display = 'flex';
     
-    // عرض الآية
     document.getElementById('tafsir-ayah-text').innerText = ayahText;
     
     const surahName = allSurahs.find(s => s.number === surahNumber)?.name || '';
     document.getElementById('tafsir-ayah-ref').innerText = `سورة ${surahName} - الآية ${ayahNumber}`;
     
-    // تحميل التفسير
     loadTafsir();
 }
 
@@ -1964,7 +1961,6 @@ async function loadTafsir() {
     const tafsirType = document.getElementById('tafsir-selector').value;
     const contentDiv = document.getElementById('tafsir-content');
     
-    // Loader
     contentDiv.innerHTML = `
         <div style="text-align: center; padding: 40px;">
             <div class="spinner" style="margin: 0 auto;"></div>
@@ -1973,7 +1969,6 @@ async function loadTafsir() {
     `;
     
     try {
-        // API للتفسير
         const response = await fetch(
             `https://api.alquran.cloud/v1/ayah/${currentTafsirAyah.surah}:${currentTafsirAyah.ayah}/${tafsirType}`
         );
@@ -1982,8 +1977,6 @@ async function loadTafsir() {
         
         if (data.code === 200 && data.data.text) {
             let tafsirText = data.data.text;
-            
-            // تنظيف النص
             tafsirText = tafsirText.replace(/\n/g, '<br>');
             
             contentDiv.innerHTML = `
@@ -1992,7 +1985,7 @@ async function loadTafsir() {
                 </div>
             `;
             
-            playNotify();
+            if (typeof playNotify === 'function') playNotify();
         } else {
             throw new Error('لم يتم العثور على التفسير');
         }
@@ -2008,16 +2001,15 @@ async function loadTafsir() {
     }
 }
 
-// إضافة خاصية الضغط على الآيات عند فتح السورة
+// إضافة خاصية الضغط على الآيات
 function makeAyahsClickable() {
-    setTimeout(() => {
+    setTimeout(function() {
         const ayahElements = document.querySelectorAll('.ayah-item');
         
-        ayahElements.forEach((el, index) => {
+        ayahElements.forEach(function(el, index) {
             el.style.cursor = 'pointer';
             el.style.transition = 'all 0.3s';
             
-            // تأثير hover
             el.addEventListener('mouseenter', function() {
                 this.style.background = 'rgba(201, 176, 122, 0.1)';
                 this.style.padding = '5px';
@@ -2029,7 +2021,6 @@ function makeAyahsClickable() {
                 this.style.padding = '0';
             });
             
-            // الضغط لفتح التفسير
             el.addEventListener('click', function() {
                 const ayahText = this.textContent.trim();
                 const ayahNumber = index + 1;
@@ -2038,3 +2029,4 @@ function makeAyahsClickable() {
         });
     }, 500);
 }
+
