@@ -195,7 +195,8 @@ let ayahTimings = []; // متغير عام لحفظ توقيت الآيات
 
 function openSurah(id, name) {
     currentSurahId = id;
-    
+        // تحديث الرابط والصورة
+    updatePageMeta(id, name);
     // تحديث الرابط في المتصفح
     if (history.pushState) {
         history.pushState({}, '', '?surah=' + id);
@@ -1855,3 +1856,44 @@ setTimeout(function() {
         }
     }
 }, 1000);
+// ================= تحديث Meta Tags =================
+function updatePageMeta(surahId, surahName) {
+    const surah = allSurahs.find(s => s.number === surahId);
+    if (!surah) return;
+    
+    // تحديث الرابط
+    const newUrl = window.location.origin + window.location.pathname + '?surah=' + surahId;
+    window.history.replaceState({}, '', newUrl);
+    
+    // صورة السورة
+    const imageUrl = `https://cdn.islamic.network/quran/images/${surahId}.jpg`;
+    
+    // العنوان والوصف
+    const title = `سورة ${surahName} - حقيبة المؤمن`;
+    const desc = `${surah.englishName} | ${surah.numberOfAyahs} آية | ${surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}`;
+    
+    // تحديث Meta Tags
+    document.getElementById('og-title').setAttribute('content', title);
+    document.getElementById('og-desc').setAttribute('content', desc);
+    document.getElementById('og-image').setAttribute('content', imageUrl);
+    document.getElementById('og-url').setAttribute('content', newUrl);
+    
+    document.getElementById('tw-title').setAttribute('content', title);
+    document.getElementById('tw-desc').setAttribute('content', desc);
+    document.getElementById('tw-image').setAttribute('content', imageUrl);
+    
+    // تحديث عنوان الصفحة
+    document.title = title;
+}
+// ================= فتح السورة من الرابط =================
+setTimeout(function() {
+    const params = new URLSearchParams(window.location.search);
+    const surahNum = params.get('surah');
+    
+    if (surahNum && allSurahs.length > 0) {
+        const surah = allSurahs.find(s => s.number == surahNum);
+        if (surah) {
+            openSurah(parseInt(surahNum), surah.name);
+        }
+    }
+}, 1500);
