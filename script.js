@@ -224,16 +224,19 @@ function openSurah(id, name) {
             }
             
             // عرض الآيات
-            ayahs.forEach((ayah, index) => {
-                let text = ayah.text;
-                
-                // ✅ حذف البسملة من الآية الأولى فقط (ما عدا الفاتحة)
-                if (index === 0 && id !== 1) {
-                    // حذف جميع أشكال البسملة من بداية النص
-                    text = text.replace(/^بِسۡمِ\s*ٱللَّهِ\s*ٱلرَّحۡمَـٰنِ\s*ٱلرَّحِیمِ\s*۝?\s*/i, '');
-                    text = text.replace(/^بِسْمِ\s*اللَّهِ\s*الرَّحْمَٰنِ\s*الرَّحِيمِ\s*۝?\s*/i, '');
-                    text = text.replace(/^بسم\s*الله\s*الرحمن\s*الرحيم\s*۝?\s*/i, '');
-                }
+     // عرض الآيات
+ayahs.forEach((ayah, index) => {
+    let text = ayah.text;
+    
+    // حذف البسملة من الآية الأولى (ما عدا الفاتحة)
+    if (index === 0 && id !== 1) {
+        // حذف كل أشكال البسملة
+        text = text.replace(/بِسۡمِ\s*ٱللَّهِ\s*ٱلرَّحۡمَـٰنِ\s*ٱلرَّحِیمِ/gi, '');
+        text = text.replace(/بِسْمِ\s*اللَّهِ\s*الرَّحْمَٰنِ\s*الرَّحِيمِ/gi, '');
+        text = text.replace(/بسم\s*الله\s*الرحمن\s*الرحيم/gi, '');
+        text = text.replace(/۝/g, ''); // حذف رمز نهاية الآية لو موجود
+    }
+
                 
                 text = text.trim();
                 
