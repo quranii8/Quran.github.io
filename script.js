@@ -195,7 +195,14 @@ let ayahTimings = []; // متغير عام لحفظ توقيت الآيات
 
 function openSurah(id, name) {
     currentSurahId = id;
+    
+    // تحديث الرابط في المتصفح
+    if (history.pushState) {
+        history.pushState({}, '', '?surah=' + id);
+    }
+    
     document.getElementById('sideMenu').classList.remove('open');
+
     
     document.getElementById('full-quran-view').style.display = 'none';
     document.getElementById('topics-view').style.display = 'none';
@@ -1792,65 +1799,59 @@ function showPageTransition(arrow) {
     // إزالة بعد ثانية
     setTimeout(() => indicator.remove(), 800);
 }
-// ================= دالة مشاركة السورة =================
-async function shareSurah() {
+// ================= دالة مشاركة السورة =================// ================= دالة مشاركة السورة =================
+function shareSurah() {
     if (!currentSurahId) {
         alert('⚠️ اختر سورة أولاً');
         return;
     }
 
-    // جلب معلومات السورة الحالية
-    const surah = allSurahs.find(s => s.number === currentSurahId);
-    if (!surah) return;
-
-    // بناء الرابط المباشر
-    const shareUrl = `${window.location.origin}${window.location.pathname}?surah=${currentSurahId}`;
+    // جلب اسم السورة من العنوان الظاهر
+    const surahTitle = document.getElementById('current-surah-title').innerText;
     
-    // النص المشاركة الفخم
-    const shareText = `📖 ${surah.name}\n${surah.englishName} | ${surah.numberOfAyahs} آية\n\n"${surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}"\n\nاستمع واقرأ معي 🎧`;
+    // بناء الرابط المباشر
+    const shareUrl = window.location.origin + window.location.pathname + '?surah=' + currentSurahId;
+    
+    // النص الفخم
+    const shareText = '📖 ' + surahTitle + '\n\nاستمع واقرأ معي 🎧\n\n' + shareUrl;
 
-    // التحقق من دعم المتصفح لـ Web Share API
+    // محاولة المشاركة
     if (navigator.share) {
-        try {
-            await navigator.share({
-                title: `سورة ${surah.name}`,
-                text: shareText,
-                url: shareUrl
-            });
-            playNotify();
-        } catch (err) {
-            if (err.name !== 'AbortError') {
-                console.log('مشاركة ملغية');
-            }
-        }
-    } else {
-        // النسخ التلقائي للحافظة
-        const fullText = `${shareText}\n\n${shareUrl}`;
-        navigator.clipboard.writeText(fullText).then(() => {
-            alert('✅ تم نسخ رابط السورة!\n\nالصق الرابط في أي مكان للمشاركة 📋');
+        navigator.share({
+            title: surahTitle,
+            text: shareText,
+            url: shareUrl
+        }).then(() => {
             playNotify();
         }).catch(() => {
-            // عرض الرابط في نافذة منبثقة
+            // لو ألغى المشاركة
+        });
+    } else {
+        // نسخ للحافظة
+        navigator.clipboard.writeText(shareText).then(() => {
+            alert('✅ تم نسخ الرابط!\n\n' + shareText);
+            playNotify();
+        }).catch(() => {
             prompt('📋 انسخ الرابط:', shareUrl);
         });
     }
 }
 
-// ================= فتح السورة من الرابط تلقائياً =================
-window.addEventListener('DOMContentLoaded', function() {
-    // قراءة رقم السورة من URL
+// ================= فتح السورة من الرابط =================
+// أضف هذا في دالة openSurah الموجودة أصلاً
+// ابحث عن: function openSurah(id, name) {
+// وبعد السطر الأول مباشرة أضف:
+// history.pushState({}, '', '?surah=' + id);
+
+// فتح السورة من الرابط عند تحميل الصفحة
+setTimeout(function() {
     const urlParams = new URLSearchParams(window.location.search);
-    const surahFromUrl = urlParams.get('surah');
+    const surahNum = urlParams.get('surah');
     
-    if (surahFromUrl && allSurahs.length > 0) {
-        const surahNum = parseInt(surahFromUrl);
-        const surah = allSurahs.find(s => s.number === surahNum);
-        
+    if (surahNum && allSurahs && allSurahs.length > 0) {
+        const surah = allSurahs.find(s => s.number == surahNum);
         if (surah) {
-            // فتح السورة تلقائياً
-            setTimeout(() => {
-                openSurah(surahNum, surah.name);
-            }, 500);
+            openSurah(parseInt(surahNum), surah.name);
         }
     }
-});
+}, 1000);
