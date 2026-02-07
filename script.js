@@ -2018,7 +2018,7 @@ async function loadTafsir() {
                 </div>
             `;
             
-            if (typeof playNotify === 'function') playNotify();
+
             
         } else {
             throw new Error('لم يتم العثور على التفسير');
