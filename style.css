@@ -984,3 +984,14 @@ body.dark-mode .basmala-separate {
         padding: 15px !important;
     }
 }
+#paperMushafTab {
+    background: linear-gradient(135deg, #C9B07A, #d4af37) !important;
+    color: #2F5F63 !important;
+    border: 2px solid #C9B07A !important;
+    font-weight: bold;
+}
+
+#paperMushafTab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(201, 176, 122, 0.4);
+}
