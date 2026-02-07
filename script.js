@@ -244,6 +244,38 @@ function openSurah(id, name) {
             
             document.getElementById('ayahsContainer').innerHTML = ayahsHTML;
             setupAyahHighlighting(ayahs.length);
+                // تفعيل نظام التفسير
+    makeAyahsClickable();
+    
+    // عرض رسالة إرشادية
+    setTimeout(() => {
+        const container = document.getElementById('ayahsContainer');
+        if (container && !document.getElementById('tafsir-hint')) {
+            const hint = document.createElement('div');
+            hint.id = 'tafsir-hint';
+            hint.style.cssText = `
+                background: linear-gradient(90deg, var(--gold), #d4af37);
+                color: var(--dark-teal);
+                padding: 12px 20px;
+                border-radius: 15px;
+                text-align: center;
+                font-weight: bold;
+                margin: 10px;
+                font-size: 0.95rem;
+                box-shadow: 0 4px 15px rgba(201, 176, 122, 0.3);
+                animation: fadeIn 0.5s;
+            `;
+            hint.innerHTML = '💡 اضغط على أي آية لقراءة تفسيرها';
+            container.parentNode.insertBefore(hint, container);
+            
+            // إخفاء الرسالة بعد 5 ثواني
+            setTimeout(() => {
+                hint.style.opacity = '0';
+                hint.style.transition = 'opacity 1s';
+                setTimeout(() => hint.remove(), 1000);
+            }, 5000);
+        }
+    }, 1000);
         })
         .catch(error => {
             console.error('❌ خطأ:', error);
@@ -1897,3 +1929,112 @@ setTimeout(function() {
         }
     }
 }, 1500);
+// ================= نظام التفسير التفاعلي =================
+
+let currentTafsirAyah = null;
+
+// فتح نافذة التفسير
+function openTafsirModal(ayahNumber, ayahText, surahNumber) {
+    currentTafsirAyah = { ayah: ayahNumber, surah: surahNumber };
+    
+    // عرض النافذة
+    const modal = document.getElementById('tafsir-modal');
+    modal.style.display = 'flex';
+    
+    // عرض الآية
+    document.getElementById('tafsir-ayah-text').innerText = ayahText;
+    
+    const surahName = allSurahs.find(s => s.number === surahNumber)?.name || '';
+    document.getElementById('tafsir-ayah-ref').innerText = `سورة ${surahName} - الآية ${ayahNumber}`;
+    
+    // تحميل التفسير
+    loadTafsir();
+}
+
+// إغلاق نافذة التفسير
+function closeTafsirModal() {
+    document.getElementById('tafsir-modal').style.display = 'none';
+    currentTafsirAyah = null;
+}
+
+// تحميل التفسير من API
+async function loadTafsir() {
+    if (!currentTafsirAyah) return;
+    
+    const tafsirType = document.getElementById('tafsir-selector').value;
+    const contentDiv = document.getElementById('tafsir-content');
+    
+    // Loader
+    contentDiv.innerHTML = `
+        <div style="text-align: center; padding: 40px;">
+            <div class="spinner" style="margin: 0 auto;"></div>
+            <p style="color: var(--gold); margin-top: 15px;">جاري تحميل التفسير...</p>
+        </div>
+    `;
+    
+    try {
+        // API للتفسير
+        const response = await fetch(
+            `https://api.alquran.cloud/v1/ayah/${currentTafsirAyah.surah}:${currentTafsirAyah.ayah}/${tafsirType}`
+        );
+        
+        const data = await response.json();
+        
+        if (data.code === 200 && data.data.text) {
+            let tafsirText = data.data.text;
+            
+            // تنظيف النص
+            tafsirText = tafsirText.replace(/\n/g, '<br>');
+            
+            contentDiv.innerHTML = `
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border-right: 4px solid var(--gold);">
+                    <p style="margin: 0; text-align: justify; direction: rtl;">${tafsirText}</p>
+                </div>
+            `;
+            
+            playNotify();
+        } else {
+            throw new Error('لم يتم العثور على التفسير');
+        }
+        
+    } catch (error) {
+        contentDiv.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #ff6b6b;">
+                <div style="font-size: 3rem; margin-bottom: 15px;">⚠️</div>
+                <p style="font-size: 1.1rem;">عذراً، حدث خطأ في تحميل التفسير</p>
+                <p style="font-size: 0.9rem; opacity: 0.8;">يرجى المحاولة مرة أخرى</p>
+            </div>
+        `;
+    }
+}
+
+// إضافة خاصية الضغط على الآيات عند فتح السورة
+function makeAyahsClickable() {
+    setTimeout(() => {
+        const ayahElements = document.querySelectorAll('.ayah-item');
+        
+        ayahElements.forEach((el, index) => {
+            el.style.cursor = 'pointer';
+            el.style.transition = 'all 0.3s';
+            
+            // تأثير hover
+            el.addEventListener('mouseenter', function() {
+                this.style.background = 'rgba(201, 176, 122, 0.1)';
+                this.style.padding = '5px';
+                this.style.borderRadius = '8px';
+            });
+            
+            el.addEventListener('mouseleave', function() {
+                this.style.background = 'transparent';
+                this.style.padding = '0';
+            });
+            
+            // الضغط لفتح التفسير
+            el.addEventListener('click', function() {
+                const ayahText = this.textContent.trim();
+                const ayahNumber = index + 1;
+                openTafsirModal(ayahNumber, ayahText, currentSurahId);
+            });
+        });
+    }, 500);
+}
