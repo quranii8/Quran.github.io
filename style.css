@@ -719,21 +719,7 @@ body.dark-mode .achievement-label {
     font-size: 0.9rem;
 }
 
-@media (max-width: 768px) {
-    .mushaf-header h2 {
-        font-size: 1.1rem;
-    }
-    
-    .mushaf-nav-btn {
-        padding: 12px 10px;
-        font-size: 1.2rem;
-    }
-    
-    .mushaf-controls button {
-        padding: 6px 10px;
-        font-size: 0.8rem;
-    }
-}
+
 /* أنيميشن مؤشر الصفحة */
 @keyframes fadeInOut {
     0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
@@ -948,12 +934,7 @@ body.dark-mode .achievement-label {
         width: 130px !important;
         height: 130px !important;
     }
-    @media (max-width: 768px) {
-    .main-nav {
-        justify-content: flex-start !important;
-        padding: 10px 10px !important;
-    }
-}
+  
 }
 /* اختبار البسملة - لون أحمر واضح */
 ./* البسملة الذهبية */
@@ -977,13 +958,7 @@ body.dark-mode .basmala-separate {
 }
 
 /* الموبايل */
-@media (max-width: 768px) {
-    .basmala-separate {
-        font-size: 2.5rem !important;
-        margin: 25px auto !important;
-        padding: 15px !important;
-    }
-}
+
 #paperMushafTab {
     background: linear-gradient(135deg, #C9B07A, #d4af37) !important;
     color: #2F5F63 !important;
@@ -994,4 +969,40 @@ body.dark-mode .basmala-separate {
 #paperMushafTab:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(201, 176, 122, 0.4);
+}
+/* للشاشات الصغيرة جداً */
+@media (max-width: 400px) {
+    
+    html {
+        font-size: 13px;
+    }
+    
+    header h1 {
+        font-size: 1.1rem !important;
+    }
+    
+    .main-nav button {
+        font-size: 0.65rem !important;
+        padding: 5px 8px !important;
+    }
+    
+    .surah-card, .category-card {
+        font-size: 0.75rem !important;
+        padding: 8px 5px !important;
+        min-height: 40px !important;
+    }
+    
+    .ayah-text {
+        font-size: 1.2rem !important;
+        line-height: 2 !important;
+    }
+    
+    .sebha-circle {
+        width: 120px !important;
+        height: 120px !important;
+    }
+    
+    #sebhaCounter {
+        font-size: 2rem !important;
+    }
 }
