@@ -228,14 +228,26 @@ function openSurah(id, name) {
 ayahs.forEach((ayah, index) => {
     let text = ayah.text;
     
-    // حذف البسملة من الآية الأولى (ما عدا الفاتحة)
+    // حذف البسملة من أول آية (ما عدا سورة الفاتحة)
     if (index === 0 && id !== 1) {
-        // حذف كل أشكال البسملة
-        text = text.replace(/بِسۡمِ\s*ٱللَّهِ\s*ٱلرَّحۡمَـٰنِ\s*ٱلرَّحِیمِ/gi, '');
-        text = text.replace(/بِسْمِ\s*اللَّهِ\s*الرَّحْمَٰنِ\s*الرَّحِيمِ/gi, '');
-        text = text.replace(/بسم\s*الله\s*الرحمن\s*الرحيم/gi, '');
-        text = text.replace(/۝/g, ''); // حذف رمز نهاية الآية لو موجود
+        // طريقة 1: حذف أي شي يبدأ بـ "بسم" أو "بِسم"
+        text = text.replace(/^[\s\u064B-\u0652]*بِ?سۡ?ْ?مِ[\s\S]*?ٱلرَّحِی?يمِ[\s\u064B-\u0652]*۝?/i, '');
+        
+        // طريقة 2: حذف كل البسملات الممكنة
+        text = text.replace(/بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ/g, '');
+        text = text.replace(/بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ/g, '');
+        text = text.replace(/بسم الله الرحمن الرحيم/g, '');
+        
+        // طريقة 3: حذف أي كلمة تحتوي على "بسم"
+        const words = text.split(' ');
+        text = words.filter(word => !word.includes('بِسۡمِ') && !word.includes('بِسْمِ') && !word.includes('بسم')).join(' ');
     }
+    
+    // تنظيف المسافات الزائدة
+    text = text.trim();
+    text = text.replace(/\s+/g, ' ');
+    text = text.replace(/۝/g, ''); // حذف رمز نهاية الآية
+
 
                 
                 text = text.trim();
