@@ -655,7 +655,6 @@ function switchMainTab(t) {
         'qibla-section', 
         'khatma-section',
         'achievements-section',
-        'memorize-section'  // 👈 أضف هذا السطر!
     ];
 
 
