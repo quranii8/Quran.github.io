@@ -2084,4 +2084,381 @@ function makeAyahsClickable() {
         });
     }, 500);
 }
+// ================= قسم اختبار الحفظ ================= 
+
+let memorizeData = {
+    level: null,
+    surahId: null,
+    surahName: null,
+    ayahs: [],
+    blanks: [],
+    answers: [],
+    startTime: null,
+    timerInterval: null,
+    hintsUsed: 0
+};
+
+// تحميل قائمة السور في القائمة المنسدلة
+function loadMemorizeSurahs() {
+    const select = document.getElementById('memorize-surah-select');
+    if (!select || select.options.length > 1) return;
+    
+    if (allSurahs && allSurahs.length > 0) {
+        allSurahs.forEach(surah => {
+            const option = document.createElement('option');
+            option.value = surah.number;
+            option.textContent = `${surah.number}. ${surah.name} (${surah.numberOfAyahs} آية)`;
+            select.appendChild(option);
+        });
+    }
+}
+
+// اختيار المستوى
+function selectLevel(level) {
+    memorizeData.level = level;
+    
+    // إزالة التحديد من كل الكروت
+    document.querySelectorAll('.level-card').forEach(card => {
+        card.classList.remove('selected');
+        card.style.transform = 'scale(1)';
+    });
+    
+    // تحديد الكارد المختار
+    const selected = document.querySelector(`[data-level="${level}"]`);
+    if (selected) {
+        selected.classList.add('selected');
+    }
+    
+    // إظهار اختيار السورة
+    document.getElementById('surah-selection').style.display = 'block';
+    loadMemorizeSurahs();
+}
+
+// بدء الاختبار
+async function startMemorizeTest() {
+    const surahSelect = document.getElementById('memorize-surah-select');
+    const surahId = parseInt(surahSelect.value);
+    
+    if (!surahId || !memorizeData.level) {
+        alert('⚠️ يرجى اختيار المستوى والسورة');
+        return;
+    }
+    
+    memorizeData.surahId = surahId;
+    memorizeData.surahName = surahSelect.options[surahSelect.selectedIndex].text;
+    memorizeData.hintsUsed = 0;
+    
+    // جلب آيات السورة
+    try {
+        const response = await fetch(`https://api.alquran.cloud/v1/surah/${surahId}/ar.alafasy`);
+        const data = await response.json();
+        
+        if (data.code === 200) {
+            memorizeData.ayahs = data.data.ayahs;
+            generateTest();
+            showTestScreen();
+            startTimer();
+        }
+    } catch (error) {
+        alert('❌ حدث خطأ في تحميل السورة، يرجى المحاولة مرة أخرى');
+    }
+}
+
+// توليد الاختبار
+function generateTest() {
+    const gapInterval = {
+        'easy': 5,
+        'medium': 3,
+        'hard': 2
+    };
+    
+    const interval = gapInterval[memorizeData.level];
+    memorizeData.blanks = [];
+    memorizeData.answers = [];
+    
+    let html = '';
+    let blankIndex = 0;
+    
+    memorizeData.ayahs.forEach((ayah, ayahIndex) => {
+        let text = ayah.text;
+        
+        // حذف البسملة من أول آية (ما عدا الفاتحة)
+        if (ayahIndex === 0 && memorizeData.surahId !== 1) {
+            text = text.replace(/بِسۡمِ\s*ٱللَّهِ\s*ٱلرَّحۡمَـٰنِ\s*ٱلرَّحِیمِ/gi, '');
+            text = text.replace(/۝/g, '');
+            text = text.trim();
+        }
+        
+        const words = text.split(/\s+/);
+        let ayahHtml = '';
+        
+        words.forEach((word, wordIndex) => {
+            // تحديد إذا كانت هذه الكلمة فراغ
+            if (wordIndex > 0 && wordIndex % interval === 0) {
+                // حفظ الإجابة الصحيحة
+                const cleanWord = word.replace(/[ًٌٍَُِّْ]/g, ''); // إزالة التشكيل
+                memorizeData.blanks.push({
+                    index: blankIndex,
+                    correct: cleanWord,
+                    ayahNumber: ayah.numberInSurah
+                });
+                
+                ayahHtml += `<input type="text" class="blank-input" data-index="${blankIndex}" placeholder="..." autocomplete="off"> `;
+                blankIndex++;
+            } else {
+                ayahHtml += word + ' ';
+            }
+        });
+        
+        html += `<span>${ayahHtml}</span> <span style="color:var(--gold); font-size:1.1rem;">﴿${ayah.numberInSurah}﴾</span><br><br>`;
+    });
+    
+    document.getElementById('test-ayahs-container').innerHTML = html;
+    document.getElementById('test-surah-name').textContent = memorizeData.surahName;
+    updateProgress();
+}
+
+// عرض شاشة الاختبار
+function showTestScreen() {
+    document.getElementById('memorize-start').style.display = 'none';
+    document.getElementById('memorize-test').style.display = 'block';
+    document.getElementById('memorize-result').style.display = 'none';
+}
+
+// بدء العداد
+function startTimer() {
+    memorizeData.startTime = Date.now();
+    
+    if (memorizeData.timerInterval) {
+        clearInterval(memorizeData.timerInterval);
+    }
+    
+    memorizeData.timerInterval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - memorizeData.startTime) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        document.getElementById('test-timer').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }, 1000);
+}
+
+// تحديث التقدم
+function updateProgress() {
+    const inputs = document.querySelectorAll('.blank-input');
+    const filled = Array.from(inputs).filter(inp => inp.value.trim() !== '').length;
+    document.getElementById('test-progress').textContent = `${filled}/${inputs.length}`;
+}
+
+// إضافة مستمع للإدخال
+document.addEventListener('input', (e) => {
+    if (e.target.classList.contains('blank-input')) {
+        updateProgress();
+    }
+});
+
+// فحص الإجابات
+function checkAnswers() {
+    if (memorizeData.timerInterval) {
+        clearInterval(memorizeData.timerInterval);
+    }
+    
+    const inputs = document.querySelectorAll('.blank-input');
+    let correct = 0;
+    let wrong = 0;
+    const mistakes = [];
+    
+    inputs.forEach((input) => {
+        const index = parseInt(input.dataset.index);
+        const blank = memorizeData.blanks[index];
+        const userAnswer = input.value.trim().replace(/[ًٌٍَُِّْ]/g, ''); // إزالة التشكيل
+        const correctAnswer = blank.correct.replace(/[ًٌٍَُِّْ]/g, '');
+        
+        // مقارنة بدون تشكيل وبدون همزات
+        const normalizedUser = normalizeArabic(userAnswer);
+        const normalizedCorrect = normalizeArabic(correctAnswer);
+        
+        if (normalizedUser === normalizedCorrect) {
+            input.classList.add('correct');
+            input.classList.remove('wrong');
+            correct++;
+        } else {
+            input.classList.add('wrong');
+            input.classList.remove('correct');
+            wrong++;
+            mistakes.push({
+                user: userAnswer || '(فارغ)',
+                correct: blank.correct,
+                ayah: blank.ayahNumber
+            });
+        }
+    });
+    
+    // حساب النقاط
+    const total = inputs.length;
+    const score = Math.round((correct / total) * 100);
+    const points = correct * 10;
+    
+    // عرض النتيجة
+    showResult(score, correct, wrong, total, points, mistakes);
+}
+
+// تطبيع النص العربي (إزالة الهمزات والاختلافات)
+function normalizeArabic(text) {
+    return text
+        .replace(/[أإآا]/g, 'ا')
+        .replace(/[ىي]/g, 'ي')
+        .replace(/ة/g, 'ه')
+        .replace(/[ًٌٍَُِّْ]/g, '')
+        .replace(/\s+/g, '')
+        .toLowerCase();
+}
+
+// إعطاء تلميح
+function giveHint() {
+    const inputs = document.querySelectorAll('.blank-input');
+    const empty = Array.from(inputs).filter(inp => 
+        inp.value.trim() === '' && 
+        !inp.classList.contains('correct')
+    );
+    
+    if (empty.length === 0) {
+        alert('💡 لقد ملأت كل الفراغات!');
+        return;
+    }
+    
+    // اختيار فراغ عشوائي
+    const randomInput = empty[Math.floor(Math.random() * empty.length)];
+    const index = parseInt(randomInput.dataset.index);
+    const correctWord = memorizeData.blanks[index].correct;
+    
+    // إعطاء أول حرفين
+    const hint = correctWord.substring(0, 2);
+    randomInput.value = hint;
+    randomInput.focus();
+    
+    memorizeData.hintsUsed++;
+    
+    if (typeof playNotify === 'function') playNotify();
+}
+
+// عرض النتيجة
+function showResult(score, correct, wrong, total, points, mistakes) {
+    document.getElementById('memorize-test').style.display = 'none';
+    document.getElementById('memorize-result').style.display = 'block';
+    
+    // Emoji حسب النتيجة
+    let emoji = '🎉';
+    let title = 'ممتاز!';
+    if (score >= 90) {
+        emoji = '🏆';
+        title = 'مبدع! حفظ ممتاز';
+    } else if (score >= 70) {
+        emoji = '⭐';
+        title = 'أحسنت! حفظ جيد';
+    } else if (score >= 50) {
+        emoji = '👍';
+        title = 'جيد، واصل التدريب';
+    } else {
+        emoji = '📚';
+        title = 'يحتاج مراجعة';
+    }
+    
+    document.getElementById('result-emoji').textContent = emoji;
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-score').textContent = `${score}%`;
+    
+    // الإحصائيات
+    const timeElapsed = document.getElementById('test-timer').textContent;
+    document.getElementById('result-stats').innerHTML = `
+        <p style="margin:10px 0; font-size:1.1rem;"><strong>📊 النتيجة:</strong> ${correct} صحيحة من ${total}</p>
+        <p style="margin:10px 0; font-size:1.1rem;"><strong>⏱️ الوقت:</strong> ${timeElapsed}</p>
+        <p style="margin:10px 0; font-size:1.1rem;"><strong>🎯 النقاط:</strong> ${points} نقطة</p>
+        <p style="margin:10px 0; font-size:1.1rem;"><strong>💡 التلميحات:</strong> ${memorizeData.hintsUsed}</p>
+    `;
+    
+    // الأخطاء
+    if (mistakes.length > 0) {
+        let mistakesHtml = '<h3 style="color:var(--dark-teal); margin:20px 0 10px 0;">❌ الأخطاء:</h3>';
+        mistakesHtml += '<div style="background:rgba(220,53,69,0.1); padding:15px; border-radius:10px; border-right:4px solid #dc3545;">';
+        
+        mistakes.forEach(m => {
+            mistakesHtml += `
+                <p style="margin:10px 0; padding:10px; background:white; border-radius:8px;">
+                    <strong>الآية ${m.ayah}:</strong><br>
+                    إجابتك: <span style="color:#dc3545;">${m.user}</span><br>
+                    الصحيح: <span style="color:#28a745; font-weight:bold;">${m.correct}</span>
+                </p>
+            `;
+        });
+        
+        mistakesHtml += '</div>';
+        document.getElementById('result-mistakes').innerHTML = mistakesHtml;
+    } else {
+        document.getElementById('result-mistakes').innerHTML = '<p style="color:#28a745; font-size:1.2rem; font-weight:bold; text-align:center;">✅ لا توجد أخطاء! ممتاز!</p>';
+    }
+    
+    // حفظ أفضل نتيجة
+    saveBestScore(memorizeData.surahId, score);
+    
+    // إضافة للإنجازات
+    if (achievements) {
+        achievements.awrad++; // نستخدمها لعدد الاختبارات
+        saveAchievements();
+    }
+}
+
+// حفظ أفضل نتيجة
+function saveBestScore(surahId, score) {
+    const key = `memorize_best_${surahId}`;
+    const current = localStorage.getItem(key);
+    
+    if (!current || score > parseInt(current)) {
+        localStorage.setItem(key, score);
+    }
+}
+
+// إعادة المحاولة
+function retryMemorizeTest() {
+    startMemorizeTest();
+}
+
+// العودة للبداية
+function backToMemorizeStart() {
+    document.getElementById('memorize-result').style.display = 'none';
+    document.getElementById('memorize-test').style.display = 'none';
+    document.getElementById('memorize-start').style.display = 'block';
+    
+    // إعادة تعيين
+    document.querySelectorAll('.level-card').forEach(card => {
+        card.classList.remove('selected');
+        card.style.transform = 'scale(1)';
+    });
+    
+    document.getElementById('surah-selection').style.display = 'none';
+    document.getElementById('memorize-surah-select').value = '';
+    
+    memorizeData = {
+        level: null,
+        surahId: null,
+        surahName: null,
+        ayahs: [],
+        blanks: [],
+        answers: [],
+        startTime: null,
+        timerInterval: null,
+        hintsUsed: 0
+    };
+}
+
+// إعادة تعيين الاختبار
+function resetMemorizeTest() {
+    if (confirm('هل تريد إعادة تعيين جميع الإجابات؟')) {
+        document.querySelectorAll('.blank-input').forEach(input => {
+            input.value = '';
+            input.classList.remove('correct', 'wrong');
+        });
+        updateProgress();
+        startTimer();
+    }
+}
 
