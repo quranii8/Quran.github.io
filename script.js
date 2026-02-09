@@ -646,7 +646,7 @@ function switchMainTab(t) {
     const activeTab = document.getElementById(t + 'Tab');
     if (activeTab) activeTab.classList.add('active');
 
-    // 2. قائمة كل الأقسام (مع قسم الإنجازات)
+    // 2. قائمة كل الأقسام (مع قسم الحفظ والإنجازات)
     const allSections = [
         'quran-section', 
         'azkar-section', 
@@ -654,9 +654,10 @@ function switchMainTab(t) {
         'prayer-section', 
         'qibla-section', 
         'khatma-section',
-        'achievements-section'  // ✨ مهم جداً
-'memorize-section'
+        'achievements-section',
+        'memorize-section'  // 👈 أضف هذا السطر!
     ];
+
 
     // 3. إخفاء كل الأقسام وإظهار المطلوب فقط
     allSections.forEach(s => {
