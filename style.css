@@ -1393,3 +1393,28 @@ body.dark-mode .blank-input {
     background: rgba(201,176,122,0.05);
     color: white;
 }
+/* قسم الحفظ - ملء الشاشة */
+@media (max-width: 768px) {
+    #memorize-section {
+        padding: 0 !important;
+    }
+    
+    #memorize-section .daily-card {
+        margin: 10px 5px !important;
+        padding: 15px !important;
+    }
+    
+    #memorize-section h2 {
+        font-size: 1.1rem !important;
+    }
+    
+    .level-card {
+        padding: 15px 10px !important;
+        font-size: 0.85rem !important;
+    }
+    
+    .blank-input {
+        min-width: 60px !important;
+        font-size: 1.2rem !important;
+    }
+}
