@@ -655,6 +655,7 @@ function switchMainTab(t) {
         'qibla-section', 
         'khatma-section',
         'achievements-section'  // ✨ مهم جداً
+'memorize-section'
     ];
 
     // 3. إخفاء كل الأقسام وإظهار المطلوب فقط
