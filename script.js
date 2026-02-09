@@ -2462,4 +2462,25 @@ function resetMemorizeTest() {
         startTimer();
     }
 }
+// فتح قسم الحفظ (مستقل)
+function openMemorizeSection() {
+    // إخفاء القائمة الجانبية
+    document.getElementById('sideMenu').classList.remove('open');
+    
+    // إظهار قسم الحفظ
+    document.getElementById('memorize-section').style.display = 'block';
+    
+    // إعادة تعيين القسم للبداية
+    backToMemorizeStart();
+}
+
+// إغلاق قسم الحفظ
+function closeMemorizeSection() {
+    document.getElementById('memorize-section').style.display = 'none';
+    
+    // إيقاف التايمر لو شغال
+    if (memorizeData.timerInterval) {
+        clearInterval(memorizeData.timerInterval);
+    }
+}
 
