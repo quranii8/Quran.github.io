@@ -2278,7 +2278,7 @@ function checkAnswers() {
         const normalizedUser = normalizeArabic(userAnswer);
         const normalizedCorrect = normalizeArabic(correctAnswer);
         
-        if (normalizedUser === normalizedCorrect) {
+      if (compareArabicWords(userAnswer, blank.correct)) {
             input.classList.add('correct');
             input.classList.remove('wrong');
             correct++;
@@ -2302,16 +2302,51 @@ function checkAnswers() {
     // عرض النتيجة
     showResult(score, correct, wrong, total, points, mistakes);
 }
-
-// تطبيع النص العربي (إزالة الهمزات والاختلافات)
+// تطبيع النص العربي - نسخة محسّنة
 function normalizeArabic(text) {
+    if (!text) return '';
+    
     return text
-        .replace(/[أإآا]/g, 'ا')
-        .replace(/[ىي]/g, 'ي')
-        .replace(/ة/g, 'ه')
-        .replace(/[ًٌٍَُِّْ]/g, '')
+        // إزالة التشكيل كله
+        .replace(/[\u064B-\u065F]/g, '')  // كل التشكيلات
+        .replace(/[\u0670]/g, '')         // الألف الخنجرية
+        
+        // توحيد الهمزات
+        .replace(/[أإآٱءئؤ]/g, 'ا')
+        
+        // توحيد الألف والياء
+        .replace(/[ىيی]/g, 'ي')
+        
+        // توحيد التاء والهاء
+        .replace(/[ةه]/g, 'ه')
+        
+        // إزالة المسافات
         .replace(/\s+/g, '')
+        
+        // حذف الأحرف الخاصة
+        .replace(/[ـ]/g, '')  // التطويل
+        
+        .trim()
         .toLowerCase();
+}
+// مقارنة ذكية للكلمات العربية
+function compareArabicWords(word1, word2) {
+    const normalized1 = normalizeArabic(word1);
+    const normalized2 = normalizeArabic(word2);
+    
+    // مقارنة مباشرة
+    if (normalized1 === normalized2) return true;
+    
+    // مقارنة بعد حذف كل الحروف المتشابهة
+    const cleaned1 = normalized1.replace(/[اويهى]/g, '');
+    const cleaned2 = normalized2.replace(/[اويهى]/g, '');
+    
+    // لو الحروف الأساسية متطابقة
+    if (cleaned1 === cleaned2 && normalized1.length === normalized2.length) {
+        return true;
+    }
+    
+    return false;
 }
 
 // إعطاء تلميح
