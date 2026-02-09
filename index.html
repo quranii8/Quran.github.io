@@ -144,6 +144,7 @@
         <button id="prayerTab" onclick="switchMainTab('prayer')">مواقيت الصلاة</button>
 <button id="qiblaTab" onclick="switchMainTab('qibla')">اتجاه القبلة</button>
 <button id="khatmaTab" onclick="switchMainTab('khatma')">تحدي الختمة 🏆</button>
+<button id="memorizeTab" onclick="switchMainTab('memorize')">🎓 اختبر حفظك</button>
 
     </div>
 </header>
@@ -490,6 +491,111 @@
 
 
 </div>
+<!-- ================= قسم اختبار الحفظ ================= -->
+<div id="memorize-section" style="display:none; padding:20px;">
+    
+    <!-- شاشة اختيار المستوى والسورة -->
+    <div id="memorize-start" class="daily-card" style="max-width: 800px; margin: auto;">
+        <h2 style="color:var(--gold); text-align:center; margin-bottom:25px;">🎓 اختبر حفظك للقرآن</h2>
+        
+        <!-- اختيار المستوى -->
+        <div style="margin-bottom:30px;">
+            <h3 style="color:var(--dark-teal); text-align:center; margin-bottom:15px;">اختر مستوى الصعوبة:</h3>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:15px;">
+                <div class="level-card" data-level="easy" onclick="selectLevel('easy')" style="background:#d4edda; border:3px solid #28a745; padding:20px; border-radius:15px; text-align:center; cursor:pointer; transition:0.3s;">
+                    <div style="font-size:2.5rem; margin-bottom:10px;">🟢</div>
+                    <h4 style="color:#155724; margin:5px 0;">سهل</h4>
+                    <p style="font-size:0.85rem; color:#666; margin:5px 0;">فراغ كل 5 كلمات</p>
+                </div>
+                
+                <div class="level-card" data-level="medium" onclick="selectLevel('medium')" style="background:#fff3cd; border:3px solid #ffc107; padding:20px; border-radius:15px; text-align:center; cursor:pointer; transition:0.3s;">
+                    <div style="font-size:2.5rem; margin-bottom:10px;">🟡</div>
+                    <h4 style="color:#856404; margin:5px 0;">متوسط</h4>
+                    <p style="font-size:0.85rem; color:#666; margin:5px 0;">فراغ كل 3 كلمات</p>
+                </div>
+                
+                <div class="level-card" data-level="hard" onclick="selectLevel('hard')" style="background:#f8d7da; border:3px solid #dc3545; padding:20px; border-radius:15px; text-align:center; cursor:pointer; transition:0.3s;">
+                    <div style="font-size:2.5rem; margin-bottom:10px;">🔴</div>
+                    <h4 style="color:#721c24; margin:5px 0;">صعب</h4>
+                    <p style="font-size:0.85rem; color:#666; margin:5px 0;">فراغ كل كلمتين</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- اختيار السورة -->
+        <div id="surah-selection" style="display:none;">
+            <h3 style="color:var(--dark-teal); text-align:center; margin-bottom:15px;">اختر السورة:</h3>
+            <select id="memorize-surah-select" style="width:100%; padding:12px; border:2px solid var(--gold); border-radius:10px; font-family:'Amiri',serif; font-size:1rem; background:white; color:var(--dark-teal); margin-bottom:20px;">
+                <option value="">-- اختر سورة --</option>
+            </select>
+            
+            <div style="text-align:center; margin-top:20px;">
+                <button onclick="startMemorizeTest()" style="background:var(--dark-teal); color:var(--gold); border:none; padding:15px 40px; border-radius:25px; font-size:1.1rem; font-weight:bold; cursor:pointer; font-family:'Amiri',serif; box-shadow:0 5px 15px rgba(0,0,0,0.2);">
+                    🎯 ابدأ الاختبار
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- شاشة الاختبار -->
+    <div id="memorize-test" style="display:none;">
+        <div class="daily-card" style="max-width:900px; margin:auto;">
+            
+            <!-- الهيدر -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                <h3 id="test-surah-name" style="color:var(--gold); margin:0;"></h3>
+                <div style="display:flex; gap:15px; align-items:center;">
+                    <div style="background:rgba(201,176,122,0.1); padding:8px 15px; border-radius:20px; font-weight:bold; color:var(--dark-teal);">
+                        ⏱️ <span id="test-timer">00:00</span>
+                    </div>
+                    <div style="background:rgba(201,176,122,0.1); padding:8px 15px; border-radius:20px; font-weight:bold; color:var(--dark-teal);">
+                        📊 <span id="test-progress">0/0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- منطقة الآيات -->
+            <div id="test-ayahs-container" style="background:white; padding:25px; border-radius:15px; margin-bottom:20px; line-height:2.5; font-size:1.4rem; text-align:justify; direction:rtl; font-family:'Scheherazade New','Amiri',serif;">
+            </div>
+            
+            <!-- الأزرار -->
+            <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                <button onclick="checkAnswers()" style="background:var(--dark-teal); color:var(--gold); border:none; padding:12px 30px; border-radius:20px; font-weight:bold; cursor:pointer; font-family:'Amiri',serif; font-size:1rem;">
+                    ✅ فحص الإجابات
+                </button>
+                <button onclick="giveHint()" style="background:var(--gold); color:var(--dark-teal); border:none; padding:12px 30px; border-radius:20px; font-weight:bold; cursor:pointer; font-family:'Amiri',serif; font-size:1rem;">
+                    💡 تلميح
+                </button>
+                <button onclick="resetMemorizeTest()" style="background:#6c757d; color:white; border:none; padding:12px 30px; border-radius:20px; font-weight:bold; cursor:pointer; font-family:'Amiri',serif; font-size:1rem;">
+                    🔄 إعادة
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- شاشة النتيجة -->
+    <div id="memorize-result" style="display:none;">
+        <div class="daily-card" style="max-width:800px; margin:auto; text-align:center;">
+            <div id="result-emoji" style="font-size:5rem; margin-bottom:20px;">🎉</div>
+            <h2 id="result-title" style="color:var(--gold); margin-bottom:15px;">أحسنت!</h2>
+            <div id="result-score" style="font-size:3rem; font-weight:bold; color:var(--dark-teal); margin:20px 0;"></div>
+            <div id="result-stats" style="background:rgba(201,176,122,0.1); padding:20px; border-radius:15px; margin:20px 0; text-align:right;">
+            </div>
+            <div id="result-mistakes" style="margin:20px 0; text-align:right;">
+            </div>
+            <div style="display:flex; gap:10px; justify-content:center; margin-top:25px; flex-wrap:wrap;">
+                <button onclick="retryMemorizeTest()" style="background:var(--dark-teal); color:var(--gold); border:none; padding:12px 30px; border-radius:20px; font-weight:bold; cursor:pointer; font-family:'Amiri',serif;">
+                    🔄 إعادة المحاولة
+                </button>
+                <button onclick="backToMemorizeStart()" style="background:var(--gold); color:var(--dark-teal); border:none; padding:12px 30px; border-radius:20px; font-weight:bold; cursor:pointer; font-family:'Amiri',serif;">
+                    🏠 اختيار سورة أخرى
+                </button>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
 <!-- ================= نافذة التفسير ================= -->
 <div id="tafsir-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
     
