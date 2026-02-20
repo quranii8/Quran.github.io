@@ -1111,29 +1111,33 @@ function switchMainTab(t) {
     }
 }
 function switchMainTab(t) {
-    // 1. تغيير حالة الأزرار العلوية
     document.querySelectorAll('.main-nav button').forEach(b => b.classList.remove('active'));
     document.getElementById(t + 'Tab')?.classList.add('active');
 
-    // 2. قائمة الأقسام مع إضافة قسم الختمة الجديد
-    const allSections = ['quran-section', 'azkar-section', 'sebha-section', 'prayer-section', 'qibla-section', 'khatma-section'];
+    const allSections = [
+        'quran-section', 'azkar-section', 'sebha-section',
+        'prayer-section', 'qibla-section', 'khatma-section',
+        'achievements-section', 'paper-mushaf-section'  // ← هذا المهم
+    ];
 
-    // 3. التبديل بين الأقسام
     allSections.forEach(s => {
         const el = document.getElementById(s);
         if (el) el.style.display = s.startsWith(t) ? 'block' : 'none';
     });
 
-    // 4. تشغيل وظائف الأقسام الخاصة
     if (t === 'qibla') getQibla();
     if (t === 'prayer') fetchPrayers();
     if (t === 'khatma' && typeof updateKhatmaUI === 'function') updateKhatmaUI();
-    
-    // 5. تصفير واجهة القرآن عند العودة لها
+
     if (t === 'quran') {
         document.getElementById('full-quran-view').style.display = 'block';
         document.getElementById('topics-view').style.display = 'none';
         document.getElementById('quran-view').style.display = 'none';
+    }
+
+    if (t === 'sebha') {
+        document.getElementById('sebha-categories').style.display = 'grid';
+        document.getElementById('sebha-main-view').style.display = 'none';
     }
 }
 // بيانات الختمة
