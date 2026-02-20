@@ -947,6 +947,37 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <!-- اختبار الصور -->
+<script>
+(function(){
+    const today = new Date().toDateString();
+    const o = document.getElementById('ro');
+    if(!o) return;
+    if(localStorage.getItem('ramadan-shown') === today){
+        o.remove(); return;
+    }
+    // نجوم
+    for(let i=0;i<140;i++){
+        const s=document.createElement('div'); s.className='st';
+        const sz=Math.random()*2.5+0.4, mo=(0.05+Math.random()*0.15).toFixed(2);
+        s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${1+Math.random()*3.5}s;--dl:${Math.random()*4}s;--mo:${mo}`;
+        o.appendChild(s);
+    }
+    // جزيئات ذهبية
+    for(let i=0;i<25;i++){
+        const p=document.createElement('div'); p.className='par';
+        const sz=Math.random()*5+2;
+        const cols=['#f5c842','#daa520','#f0d060'];
+        p.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;background:${cols[Math.floor(Math.random()*cols.length)]};--pd:${5+Math.random()*8}s;--dl:${Math.random()*8}s`;
+        o.appendChild(p);
+    }
+    localStorage.setItem('ramadan-shown', today);
+})();
+
+function closeRamadan(){
+    const o = document.getElementById('ro');
+    if(o){ o.classList.add('hidden'); setTimeout(()=>o.remove(),1500); }
+}
+</script>
 </body>
 </html>
 
