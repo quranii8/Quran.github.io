@@ -2530,7 +2530,7 @@ function closeMemorizeSection() {
         clearInterval(memorizeData.timerInterval);
     }
 }
-// ===== ثيم رمضان =====
+
 (function(){
     const today = new Date().toDateString();
     const o = document.getElementById('ro');
