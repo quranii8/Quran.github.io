@@ -1548,7 +1548,10 @@ let currentMushafPage = 1;
 let mushafZoomLevel = 1;
 
 function openPaperMushaf() {
-    document.getElementById('sideMenu').classList.remove('open');
+    // إخفاء كل شيء
+    document.querySelectorAll('.container > div').forEach(el => {
+        el.style.display = 'none';
+    });
     
     const allSections = [
         'quran-section', 'azkar-section', 'sebha-section', 
@@ -1560,15 +1563,14 @@ function openPaperMushaf() {
         if (el) el.style.display = 'none';
     });
     
+    // إظهار المصحف
     const paperSection = document.getElementById('paper-mushaf-section');
-    if (paperSection) paperSection.style.display = 'block';
+    if (paperSection) {
+        paperSection.style.display = 'block';
+    }
     
     const savedPage = localStorage.getItem('lastMushafPage');
-    if (savedPage && savedPage >= 1 && savedPage <= 569) {
-        currentMushafPage = parseInt(savedPage);
-    } else {
-        currentMushafPage = 1;
-    }
+    currentMushafPage = (savedPage >= 1 && savedPage <= 569) ? parseInt(savedPage) : 1;
     
     loadMushafPage(currentMushafPage);
 }
@@ -1576,7 +1578,10 @@ function openPaperMushaf() {
 
 function closePaperMushaf() {
     document.getElementById('paper-mushaf-section').style.display = 'none';
-    switchMainTab('quran');
+    document.getElementById('quran-section').style.display = 'block';
+    document.getElementById('full-quran-view').style.display = 'block';
+    document.getElementById('quran-view').style.display = 'none';
+    document.getElementById('topics-view').style.display = 'none';
 }
 
 
