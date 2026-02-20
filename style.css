@@ -1419,7 +1419,10 @@ body.dark-mode .blank-input {
     }
 }
 /* ===== RAMADAN OVERLAY ===== */
-#ro{position:fixed;inset:0;z-index:99999;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1.4s ease,visibility 1.4s}
+#ro{position:fixed;inset:0;z-index:99999;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1.4s ease,visibility 1.4s;background:linear-gradient(160deg,#0d0020 0%,#1a0035 30%,#0a001a 60%,#1c0a00 100%) !important;}
+
+.sky{display:none !important;}
+
 #ro.hidden{opacity:0;visibility:hidden;pointer-events:none}
 .sky{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,#2a0d5c 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 10% 80%,#1a0840 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 90% 70%,#2a0a30 0%,transparent 60%),linear-gradient(180deg,#06000f 0%,#0e0520 30%,#1a0838 60%,#0a0318 100%)}
 .neb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.12;animation:np var(--t,9s) ease-in-out infinite alternate}
