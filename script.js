@@ -1550,14 +1550,16 @@ let mushafZoomLevel = 1;
 function openPaperMushaf() {
     document.getElementById('sideMenu').classList.remove('open');
     
-    // إخفاء كل الأقسام
-    const allSections = ['quran-section', 'azkar-section', 'sebha-section', 'prayer-section', 'qibla-section', 'khatma-section', 'achievements-section'];
+    const allSections = [
+        'quran-section', 'azkar-section', 'sebha-section', 
+        'prayer-section', 'qibla-section', 'khatma-section', 
+        'achievements-section', 'memorize-section'
+    ];
     allSections.forEach(s => {
         const el = document.getElementById(s);
         if (el) el.style.display = 'none';
     });
     
-    // إظهار قسم المصحف الورقي
     const paperSection = document.getElementById('paper-mushaf-section');
     if (paperSection) paperSection.style.display = 'block';
     
@@ -1570,6 +1572,7 @@ function openPaperMushaf() {
     
     loadMushafPage(currentMushafPage);
 }
+
 
 function closePaperMushaf() {
     document.getElementById('paper-mushaf-section').style.display = 'none';
