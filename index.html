@@ -48,6 +48,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="ramadan-welcome">
+    <div class="moon">🌙</div>
+    <h1>رمضان كريم</h1>
+    <p>أعاده الله عليك بالخير واليُمن</p>
+</div>
 <!-- الضيف -->
 <div id="sideMenu" class="side-menu">
     <button class="close-btn" onclick="toggleMenu()">×</button>
@@ -895,6 +900,21 @@ if ('serviceWorker' in navigator) {
 </script>
 <!-- اختبار الصور -->
 
-
+<script>
+    const today = new Date().toDateString();
+    if (localStorage.getItem('ramadan-shown') !== today) {
+        localStorage.setItem('ramadan-shown', today);
+        setTimeout(() => { const el = document.getElementById('ramadan-welcome'); if (el) el.remove(); }, 5000);
+    } else {
+        const el = document.getElementById('ramadan-welcome'); if (el) el.remove();
+    }
+    for (let i = 0; i < 25; i++) {
+        const s = document.createElement('div');
+        s.className = 'ramadan-star';
+        s.style.cssText = `left:${Math.random()*100}vw; top:${Math.random()*100}vh; --d:${2+Math.random()*4}s; animation-delay:${Math.random()*4}s`;
+        document.body.appendChild(s);
+    }
+</script>
 </body>
 </html>
+
