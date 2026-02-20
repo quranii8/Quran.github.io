@@ -1418,3 +1418,25 @@ body.dark-mode .blank-input {
         font-size: 1.2rem !important;
     }
 }
+/* ===== ثيم رمضان ===== */
+#ramadan-welcome {
+    position: fixed; inset: 0; z-index: 99999;
+    background: radial-gradient(ellipse at center, #1a0800 0%, #0a0300 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-family: 'Amiri', serif;
+    animation: fadeWelcome 1s ease 4.5s forwards;
+}
+#ramadan-welcome .moon { font-size: 90px; animation: moonGlow 2s ease-in-out infinite alternate; }
+#ramadan-welcome h1 { color: #f5c842; font-size: 2.5rem; margin: 10px 0; text-shadow: 0 0 30px #f5c842; }
+#ramadan-welcome p { color: #d4a843; font-size: 1.2rem; }
+@keyframes moonGlow { from { filter: drop-shadow(0 0 10px gold); } to { filter: drop-shadow(0 0 40px gold); } }
+@keyframes fadeWelcome { to { opacity: 0; pointer-events: none; visibility: hidden; } }
+
+.ramadan-star {
+    position: fixed; width: 3px; height: 3px;
+    background: #f5c842; border-radius: 50%;
+    animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+    pointer-events: none; z-index: 0; opacity: 0;
+}
+@keyframes twinkle { from { opacity: 0.1; } to { opacity: 0.8; } }
