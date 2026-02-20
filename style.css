@@ -470,6 +470,8 @@ body.dark-mode .achievement-label {
 .ayah-active {
     color: var(--gold) !important;
     transition: color 0.3s ease;
+}
+
 
 /* إخفاء البسملة من الآيات */
 .ayah-item[data-ayah="1"] .basmala-part {
