@@ -18,7 +18,7 @@ body { font-family: 'Amiri', serif; background: var(--bg); color: var(--dark-tea
 
 /* الهيدر */
 header { background: var(--dark-teal); color: var(--gold); padding: 20px 10px; text-align: center; border-bottom: 5px solid var(--gold); }
-..main-nav {
+.main-nav {
     display: flex;
     gap: 8px;
     margin-top: 15px;
@@ -66,7 +66,7 @@ header { background: var(--dark-teal); color: var(--gold); padding: 20px 10px; t
 #seekSlider { width: 100%; accent-color: var(--dark-teal); height: 4px; }
 
 /* الآيات */
-..ayah-text { 
+.ayah-text { 
     background: white; 
     padding: 25px; 
     border-radius: 12px; 
@@ -1194,7 +1194,7 @@ body.dark-mode .achievement-label {
     }
     
     /* منع التمرير الأفقي */
-    body, .container, * {
+    body, .container,  {
         overflow-x: hidden !important;
         max-width: 100vw !important;
         word-wrap: break-word !important;
@@ -1587,7 +1587,7 @@ header.rt-on::before { opacity: 1; }
 /* زر تشغيل الثيم */
 #rt-btn {
     position: fixed; bottom: 24px; left: 24px;
-    z-index: 9999; width: 52px; height: 52px;
+        z-index: 100001; width: 52px; height: 52px;
     border-radius: 50%; cursor: pointer;
     border: none; outline: none;
     background: linear-gradient(145deg,#1c0e42,#2e1a60);
