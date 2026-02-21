@@ -2560,4 +2560,235 @@ function closeRamadan(){
     const o = document.getElementById('ro');
     if(o){ o.classList.add('hidden'); setTimeout(()=>o.remove(),1500); }
 }
+// =====================================================
+// ثيم رمضان - الفوانيس والسماء الليلية
+// =====================================================
+
+(function() {
+
+// SVG الأشكال
+const RT_S = {
+  lantern(i, s=1){
+    const w=Math.round(42*s), h=Math.round(68*s);
+    return `<svg width="${w}" height="${h}" viewBox="0 0 42 68">
+      <defs>
+        <radialGradient id="rtlg${i}" cx="36%" cy="32%" r="62%">
+          <stop offset="0%"  stop-color="#fef2a8"/>
+          <stop offset="22%" stop-color="#f2cb3c"/>
+          <stop offset="52%" stop-color="#c89010"/>
+          <stop offset="82%" stop-color="#7a5000"/>
+          <stop offset="100%" stop-color="#4a3000"/>
+        </radialGradient>
+        <radialGradient id="rtli${i}" cx="50%" cy="40%" r="48%">
+          <stop offset="0%"  stop-color="rgba(255,254,185,0.96)"/>
+          <stop offset="38%" stop-color="rgba(255,220,75,0.7)"/>
+          <stop offset="100%" stop-color="rgba(175,108,0,0)"/>
+        </radialGradient>
+      </defs>
+      <rect x="16" y="0" width="10" height="5" rx="2.5" fill="#d4af37"/>
+      <rect x="13" y="4" width="16" height="5" rx="2.5" fill="#b8922a"/>
+      <line x1="7" y1="12" x2="35" y2="12" stroke="#f0c840" stroke-width="1.8"/>
+      <path d="M7 12 Q2 36 7 54 L35 54 Q40 36 35 12 Z" fill="url(#rtlg${i})"/>
+      <ellipse cx="21" cy="33" rx="11.5" ry="17" fill="url(#rtli${i})"/>
+      <line x1="7" y1="54" x2="35" y2="54" stroke="#e0b030" stroke-width="1.8"/>
+      <path d="M14 54 L11 63 L31 63 L28 54 Z" fill="#b8922a"/>
+      <rect x="14" y="62" width="14" height="5" rx="2.5" fill="#d4af37"/>
+      <circle cx="21" cy="67" r="2.5" fill="#f5d782"/>
+    </svg>`;
+  },
+  crescent(i){
+    return `<svg width="40" height="46" viewBox="0 0 40 46">
+      <defs>
+        <radialGradient id="rtcg${i}" cx="36%" cy="30%" r="62%">
+          <stop offset="0%"  stop-color="#fef2a8"/>
+          <stop offset="28%" stop-color="#f0c840"/>
+          <stop offset="62%" stop-color="#c89010"/>
+          <stop offset="100%" stop-color="#7a5000"/>
+        </radialGradient>
+      </defs>
+      <path d="M20 3 A16 16 0 1 1 20 43 A9.5 9.5 0 1 0 20 3 Z" fill="url(#rtcg${i})"/>
+      <polygon points="27,7 28.5,12 33.5,12 29.5,15 31,19.5 27,16.5 23,19.5 24.5,15 20.5,12 25.5,12" fill="rgba(255,248,180,.85)"/>
+    </svg>`;
+  },
+  star(i){
+    return `<svg width="36" height="36" viewBox="0 0 36 36">
+      <defs>
+        <radialGradient id="rtsg${i}" cx="38%" cy="32%" r="58%">
+          <stop offset="0%"  stop-color="#fef2a8"/>
+          <stop offset="38%" stop-color="#f0c030"/>
+          <stop offset="100%" stop-color="#8a6000"/>
+        </radialGradient>
+      </defs>
+      <polygon points="18,2 21.5,12 32,13 24.5,20 27,30 18,24.5 9,30 11.5,20 4,13 14.5,12" fill="url(#rtsg${i})"/>
+    </svg>`;
+  },
+  mosque(i){
+    return `<svg width="46" height="50" viewBox="0 0 46 50">
+      <defs>
+        <radialGradient id="rtmsg${i}" cx="34%" cy="28%" r="68%">
+          <stop offset="0%"  stop-color="#fdf0a0"/>
+          <stop offset="32%" stop-color="#e8b820"/>
+          <stop offset="68%" stop-color="#b07e00"/>
+          <stop offset="100%" stop-color="#6a4800"/>
+        </radialGradient>
+      </defs>
+      <rect x="3" y="16" width="7" height="22" rx="2.5" fill="url(#rtmsg${i})"/>
+      <ellipse cx="6.5" cy="16" rx="4" ry="5.5" fill="url(#rtmsg${i})"/>
+      <rect x="5" y="7" width="3" height="8" rx="1.5" fill="#e0b020"/>
+      <circle cx="6.5" cy="6" r="2" fill="#f5d782"/>
+      <rect x="36" y="16" width="7" height="22" rx="2.5" fill="url(#rtmsg${i})"/>
+      <ellipse cx="39.5" cy="16" rx="4" ry="5.5" fill="url(#rtmsg${i})"/>
+      <rect x="38" y="7" width="3" height="8" rx="1.5" fill="#e0b020"/>
+      <circle cx="39.5" cy="6" r="2" fill="#f5d782"/>
+      <rect x="9" y="24" width="28" height="14" fill="url(#rtmsg${i})"/>
+      <ellipse cx="23" cy="20" rx="14" ry="9" fill="url(#rtmsg${i})"/>
+      <rect x="4" y="38" width="38" height="5" rx="2.5" fill="#d4a010"/>
+    </svg>`;
+  },
+  hexLantern(i){
+    return `<svg width="38" height="60" viewBox="0 0 38 60">
+      <defs>
+        <radialGradient id="rthlg${i}" cx="35%" cy="31%" r="62%">
+          <stop offset="0%"  stop-color="#fef0a0"/>
+          <stop offset="26%" stop-color="#f0c840"/>
+          <stop offset="58%" stop-color="#c08a10"/>
+          <stop offset="100%" stop-color="#6a4800"/>
+        </radialGradient>
+      </defs>
+      <rect x="13" y="0" width="12" height="5" rx="2.5" fill="#d4af37"/>
+      <rect x="11" y="4" width="16" height="4" rx="2" fill="#b8922a"/>
+      <polygon points="19,10 33,18 33,38 19,46 5,38 5,18" fill="url(#rthlg${i})"/>
+      <polygon points="19,10 33,18 33,38 19,46 5,38 5,18" fill="none" stroke="#e0b030" stroke-width="1.5"/>
+      <path d="M13 46 L11 54 L27 54 L25 46 Z" fill="#b8922a"/>
+      <circle cx="19" cy="57" r="2.5" fill="#f5d782"/>
+    </svg>`;
+  }
+};
+
+// توزيع الزينة
+const RT_DEFS = [
+  {t:'lantern',    pos:2,  cord:18, sw:3.8, ra:-9, rb:7,  dl:.00, gc:'rgba(255,200,55,0.8)',  gs:'13px'},
+  {t:'star',       pos:10, cord:30, sw:4.3, ra:-7, rb:8,  dl:.12, gc:'rgba(255,215,50,0.7)',  gs:'9px' },
+  {t:'mosque',     pos:18, cord:24, sw:5.1, ra:-8, rb:6,  dl:.28, gc:'rgba(240,188,40,0.75)', gs:'11px'},
+  {t:'hexLantern', pos:26, cord:33, sw:4.6, ra:-6, rb:9,  dl:.08, gc:'rgba(255,200,55,0.7)',  gs:'11px'},
+  {t:'crescent',   pos:34, cord:20, sw:3.6, ra:-10,rb:7,  dl:.38, gc:'rgba(255,210,55,0.8)',  gs:'11px'},
+  {t:'lantern',    pos:42, cord:18, sw:5.5, ra:-9, rb:6,  dl:.00, gc:'rgba(255,210,55,0.85)', gs:'15px'},
+  {t:'star',       pos:50, cord:28, sw:4.1, ra:-8, rb:9,  dl:.32, gc:'rgba(255,215,50,0.7)',  gs:'9px' },
+  {t:'mosque',     pos:58, cord:22, sw:3.7, ra:-9, rb:7,  dl:.15, gc:'rgba(255,200,55,0.8)',  gs:'13px', s:.92},
+  {t:'hexLantern', pos:66, cord:34, sw:3.9, ra:-6, rb:8,  dl:.10, gc:'rgba(255,200,55,0.7)',  gs:'11px'},
+  {t:'crescent',   pos:74, cord:20, sw:5.2, ra:-8, rb:8,  dl:.06, gc:'rgba(255,210,55,0.8)',  gs:'11px'},
+  {t:'lantern',    pos:82, cord:28, sw:4.4, ra:-7, rb:9,  dl:.24, gc:'rgba(240,188,40,0.75)', gs:'11px', s:.9},
+  {t:'star',       pos:90, cord:26, sw:4.7, ra:-9, rb:7,  dl:.35, gc:'rgba(255,215,50,0.7)',  gs:'9px' },
+  {t:'mosque',     pos:97, cord:20, sw:5.0, ra:-8, rb:6,  dl:.18, gc:'rgba(255,200,55,0.7)',  gs:'11px'},
+];
+
+const rtZone   = document.getElementById('rt-ornament-zone');
+const rtHeader = document.getElementById('site-header');
+
+// احسب الارتفاع
+const RT_HEIGHTS = {lantern:67, crescent:46, star:36, mosque:50, hexLantern:60};
+const rtMaxH = Math.max(...RT_DEFS.map(d => d.cord + (RT_HEIGHTS[d.t]||55) + 5));
+rtZone.style.height = rtMaxH + 'px';
+
+// أنشئ نجوم الهيدر
+for(let i=0; i<70; i++){
+    const s = document.createElement('div');
+    s.className = 'hstar';
+    const sz  = Math.random()*2.2+0.3;
+    const mo  = (0.08+Math.random()*.7).toFixed(2);
+    s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${1.2+Math.random()*4}s;--dl:${Math.random()*6}s;--mo:${mo};position:absolute;`;
+    rtHeader.appendChild(s);
+}
+
+// أنشئ الزينة
+RT_DEFS.forEach((d,i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'rto';
+    wrap.style.cssText = `left:${d.pos}%;`;
+
+    const cord = document.createElement('div');
+    cord.className = 'rto-cord';
+    cord.style.height = `${d.cord}px`;
+
+    const body = document.createElement('div');
+    body.className = 'rto-body';
+    body.style.cssText = `--sw:${d.sw}s;--ra:${d.ra}deg;--rb:${d.rb}deg;--gc:${d.gc};--gs:${d.gs};--sdl:${d.dl*2}s;`;
+    body.innerHTML = RT_S[d.t] ? RT_S[d.t](i, d.s||1) : '';
+
+    // نقر الزينة
+    body.addEventListener('click', e => {
+        e.stopPropagation();
+        body.style.animation = 'none';
+        body.style.filter = `drop-shadow(0 0 22px rgba(255,225,80,1)) brightness(1.3)`;
+        setTimeout(() => { body.style.animation=''; body.style.filter=''; }, 600);
+        const r = body.getBoundingClientRect();
+        for(let j=0;j<15;j++) rtAddSpark(r.left+r.width/2, r.top+r.height/2);
+    });
+
+    wrap.appendChild(cord);
+    wrap.appendChild(body);
+    rtZone.appendChild(wrap);
+});
+
+// Canvas الجزيئات
+const rtCanvas = document.getElementById('rt-canvas');
+const rtCtx    = rtCanvas.getContext('2d');
+let rtSparks=[], rtOn=false, rtAf;
+
+function rtResizeCanvas(){ rtCanvas.width=innerWidth; rtCanvas.height=innerHeight; }
+rtResizeCanvas();
+addEventListener('resize', rtResizeCanvas);
+
+function rtAddSpark(x,y){
+    for(let i=0;i<4;i++){
+        const a=Math.random()*Math.PI*2, sp=Math.random()*2.5+.5;
+        rtSparks.push({x,y,life:1,size:Math.random()*3+.8,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-Math.random()*1.8});
+    }
+}
+
+function rtDrawSparks(){
+    if(!rtOn){ rtSparks=[]; return; }
+    rtCtx.clearRect(0,0,rtCanvas.width,rtCanvas.height);
+    if(Math.random()<.15) rtAddSpark(Math.random()*rtCanvas.width, Math.random()*rtMaxH);
+    rtSparks = rtSparks.filter(s=>s.life>0);
+    rtSparks.forEach(sp=>{
+        sp.life-=.016; sp.x+=sp.vx*.45; sp.y+=sp.vy*.45; sp.vy+=.025;
+        if(sp.life<=0) return;
+        rtCtx.save();
+        rtCtx.globalAlpha = sp.life*.7;
+        const g = rtCtx.createRadialGradient(sp.x,sp.y,0,sp.x,sp.y,sp.size*2.8);
+        g.addColorStop(0,`rgba(255,242,120,${sp.life})`);
+        g.addColorStop(1,'rgba(255,200,50,0)');
+        rtCtx.fillStyle = g;
+        rtCtx.beginPath(); rtCtx.arc(sp.x,sp.y,sp.size*2.8,0,Math.PI*2); rtCtx.fill();
+        rtCtx.fillStyle = `rgba(255,255,205,${sp.life*.85})`;
+        rtCtx.beginPath(); rtCtx.arc(sp.x,sp.y,sp.size*.55,0,Math.PI*2); rtCtx.fill();
+        rtCtx.restore();
+    });
+    rtAf = requestAnimationFrame(rtDrawSparks);
+}
+
+// دالة التشغيل / الإيقاف
+window.toggleRamadanTheme = function() {
+    rtOn = !rtOn;
+    const btn = document.getElementById('rt-btn');
+
+    rtZone.classList.toggle('on', rtOn);
+    rtHeader.classList.toggle('rt-on', rtOn);
+    rtCanvas.classList.toggle('on', rtOn);
+    document.querySelectorAll('.hstar, .rto').forEach(e => e.classList.toggle('on', rtOn));
+
+    btn.textContent = rtOn ? '✨' : '🌙';
+    btn.classList.toggle('off', !rtOn);
+
+    if(rtOn){ rtDrawSparks(); localStorage.setItem('rt_theme','1'); }
+    else { cancelAnimationFrame(rtAf); rtAf=null; localStorage.removeItem('rt_theme'); }
+};
+
+// استعادة الحالة المحفوظة
+if(localStorage.getItem('rt_theme') === '1'){
+    setTimeout(() => window.toggleRamadanTheme(), 600);
+}
+
+})();
 
