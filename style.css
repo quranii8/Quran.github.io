@@ -1617,3 +1617,44 @@ header.rt-on::before { opacity: 1; }
     0%,100% { box-shadow: 0 0 0 2px rgba(212,175,55,0.5), 0 0 16px rgba(180,130,20,0.35), 0 5px 20px rgba(0,0,0,0.5); }
     50%      { box-shadow: 0 0 0 2px rgba(245,215,80,0.75), 0 0 26px rgba(212,175,55,0.6), 0 5px 20px rgba(0,0,0,0.5); }
 }
+/* ===== إصلاح ظهور الزر في كل مكان ===== */
+body {
+    overflow-x: hidden;
+}
+#rt-btn {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 20px !important;
+    z-index: 999999 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+}
+
+/* ===== إصلاح أزرار الهيدر مع الثيم ===== */
+header h1,
+header .menu-icon,
+header .main-nav,
+header .main-nav button,
+header .quran-menu-wrapper,
+header .dropdown-content {
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* تناسق الأزرار مع الثيم الليلي */
+header.rt-on h1 {
+    color: var(--gold) !important;
+    text-shadow: 0 0 15px rgba(212,175,55,0.5) !important;
+}
+header.rt-on .main-nav button {
+    border-color: rgba(212,175,55,0.7) !important;
+    color: rgba(255,235,180,0.9) !important;
+    background: rgba(255,255,255,0.05) !important;
+}
+header.rt-on .main-nav button.active {
+    background: rgba(212,175,55,0.3) !important;
+    color: #fff5d0 !important;
+    border-color: var(--gold) !important;
+}
