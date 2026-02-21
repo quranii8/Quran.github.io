@@ -1652,9 +1652,21 @@ header.rt-on .main-nav button {
     border-color: rgba(212,175,55,0.7) !important;
     color: rgba(255,235,180,0.9) !important;
     background: rgba(255,255,255,0.05) !important;
+    width: auto !important;
+    height: auto !important;
+    min-width: fit-content !important;
+    display: inline-block !important;
+    padding: 6px 14px !important;
+    border-radius: 20px !important;
+    font-size: 0.9rem !important;
 }
 header.rt-on .main-nav button.active {
     background: rgba(212,175,55,0.3) !important;
     color: #fff5d0 !important;
     border-color: var(--gold) !important;
+}
+header.rt-on .quran-menu-wrapper,
+header.rt-on .dropdown-content {
+    width: auto !important;
+    min-width: 160px !important;
 }
