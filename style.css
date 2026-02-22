@@ -23,7 +23,7 @@ header { background: var(--dark-teal); color: var(--gold); padding: 20px 10px; t
     gap: 8px;
     margin-top: 15px;
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: visible;
     padding: 10px 5px;
     -webkit-overflow-scrolling: touch; /* سلاسة السحب في iOS */
     scroll-behavior: smooth;
@@ -38,6 +38,9 @@ header { background: var(--dark-teal); color: var(--gold); padding: 20px 10px; t
 .main-nav {
     -ms-overflow-style: none;  /* IE و Edge */
     scrollbar-width: none;  /* Firefox */
+}
+.main-nav {
+    overflow-y: visible !important;
 }
 
 /* منع الأزرار من الانكماش */
