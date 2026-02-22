@@ -1712,7 +1712,7 @@ body.rt-on .p-card,
 body.rt-on #khatma-ayahs-display,
 body.rt-on .sebha-circle,
 body.rt-on .qibla-container {
-    background: linear-gradient(135deg, #0d0a2e, #1a1048) !important;
+    background: linear-gradient(to bottom, #1a1a4e, #1d3a5f, #1a5f5a) !important;
     border-color: rgba(212,175,55,0.5) !important;
     color: rgba(255,235,180,0.9) !important;
 }
