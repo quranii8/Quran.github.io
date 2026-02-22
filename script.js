@@ -2775,6 +2775,7 @@ window.toggleRamadanTheme = function() {
 
     rtZone.classList.toggle('on', rtOn);
     rtHeader.classList.toggle('rt-on', rtOn);
+    document.body.classList.toggle('rt-on', rtOn);
     rtCanvas.classList.toggle('on', rtOn);
     document.querySelectorAll('.hstar, .rto').forEach(e => e.classList.toggle('on', rtOn));
 
