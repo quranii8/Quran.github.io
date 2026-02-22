@@ -1638,7 +1638,6 @@ body {
 /* ===== إصلاح أزرار الهيدر مع الثيم ===== */
 header h1,
 header .menu-icon,
-header .main-nav,
 header .main-nav button,
 header .quran-menu-wrapper {
     position: relative !important;
@@ -1646,8 +1645,15 @@ header .quran-menu-wrapper {
 }
 header .dropdown-content {
     position: absolute !important;
+    top: 100% !important;
+    right: 0 !important;
     z-index: 999999 !important;
+    background: white !important;
+    border-radius: 12px !important;
+    min-width: 170px !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
 }
+
 
 
 /* تناسق الأزرار مع الثيم الليلي */
