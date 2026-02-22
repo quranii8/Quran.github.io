@@ -2776,6 +2776,32 @@ window.toggleRamadanTheme = function() {
     rtZone.classList.toggle('on', rtOn);
     rtHeader.classList.toggle('rt-on', rtOn);
     document.body.classList.toggle('rt-on', rtOn);
+    // نجوم المربعات
+function addCardStars(card) {
+    if (card.querySelector('.card-stars')) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'card-stars';
+    for (let i = 0; i < 15; i++) {
+        const s = document.createElement('div');
+        const sz = Math.random() * 1.8 + 0.4;
+        s.style.cssText = `
+            position:absolute;
+            border-radius:50%;
+            background:white;
+            width:${sz}px;height:${sz}px;
+            left:${Math.random()*100}%;
+            top:${Math.random()*100}%;
+            animation:starTwinkle ${1.5+Math.random()*2.5}s ease-in-out ${Math.random()*3}s infinite alternate;
+        `;
+        wrap.appendChild(s);
+    }
+    card.appendChild(wrap);
+}
+
+document.querySelectorAll('.zekr-card, .p-card, .sebha-circle').forEach(card => {
+    addCardStars(card);
+});
+
     rtCanvas.classList.toggle('on', rtOn);
     document.querySelectorAll('.hstar, .rto').forEach(e => e.classList.toggle('on', rtOn));
 
