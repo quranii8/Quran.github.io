@@ -1705,4 +1705,25 @@ header.rt-on .main-nav button.active {
 header.rt-on .menu-icon {
     z-index: 999999 !important;
 }
+/* ===== ألوان الثيم الرمضاني للمربعات ===== */
+body.rt-on .zekr-card,
+body.rt-on .prayer-hero-card,
+body.rt-on .p-card,
+body.rt-on #khatma-ayahs-display,
+body.rt-on .sebha-circle,
+body.rt-on .qibla-container {
+    background: linear-gradient(135deg, #0d0a2e, #1a1048) !important;
+    border-color: rgba(212,175,55,0.5) !important;
+    color: rgba(255,235,180,0.9) !important;
+}
+
+body.rt-on .zekr-counter {
+    background: rgba(212,175,55,0.2) !important;
+    color: var(--gold) !important;
+}
+
+body.rt-on .p-card b,
+body.rt-on .p-card span {
+    color: rgba(255,235,180,0.85) !important;
+}
 
