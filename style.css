@@ -1726,4 +1726,23 @@ body.rt-on .p-card b,
 body.rt-on .p-card span {
     color: rgba(255,235,180,0.85) !important;
 }
+body.rt-on .zekr-card,
+body.rt-on .p-card,
+body.rt-on .sebha-circle {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+body.rt-on .zekr-card .card-stars,
+body.rt-on .p-card .card-stars,
+body.rt-on .sebha-circle .card-stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+@keyframes starTwinkle {
+    from { opacity: 0.1; transform: scale(0.7); }
+    to   { opacity: 0.9; transform: scale(1.5); }
+}
 
